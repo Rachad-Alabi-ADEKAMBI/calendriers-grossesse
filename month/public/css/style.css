@@ -1,0 +1,240 @@
+@import url("https://fonts.cdnfonts.com/css/verdana");
+html, body {
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.btn-primary {
+  background-color: rgb(250, 137, 156);
+  border: none;
+  color: #393F82;
+  border-radius: 5px;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  padding-top: 15px;
+  padding-bottom: 40px;
+}
+
+.main {
+  width: 100%;
+  height: 93vh;
+  border-radius: 5px;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+.main__text {
+  width: 70%;
+  position: relative;
+  margin: auto;
+  height: 100%;
+}
+.main__text h1 {
+  margin: 15px auto;
+  font-family: "Verdana", sans-serif;
+  color: #393F82;
+}
+.main__text h1 span {
+  margin-left: 10px;
+}
+.main__text h1 span a {
+  cursor: pointer;
+}
+.main__text h1 span a i {
+  color: #393F82;
+  font-size: 0.5em;
+  font-weight: bold;
+}
+.main__text h1 span a:hover {
+  font-size: larger;
+}
+.main__text strong {
+  font-weight: bold;
+}
+.main__text span {
+  color: #393F82;
+  font-weight: bold;
+}
+.main__text .proceed {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 340px;
+  position: relative;
+}
+.main__text .proceed .form {
+  margin-left: 15px;
+  display: block;
+  width: 70%;
+}
+.main__text .proceed .form label {
+  height: 90px;
+  width: 200px;
+  border-radius: 5px;
+  background-color: bisque;
+  margin: 5px auto;
+}
+.main__text .proceed .form label p {
+  width: 100%;
+}
+.main__text .proceed .form .or {
+  margin: auto;
+  padding-left: 35%;
+  font-weight: bold;
+}
+.main__text .proceed .btn {
+  height: 40px;
+  float: right;
+  position: absolute;
+  top: 100px;
+  right: 10px;
+  color: white;
+}
+.main__text .proceed .btn:hover {
+  background-color: #393F82;
+  color: rgb(250, 137, 156);
+}
+.main__text h2 {
+  text-decoration: underline;
+}
+.main__text .results {
+  min-height: 190px;
+  width: 100%;
+}
+.main__text .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  left: 10px;
+  justify-content: flex-start;
+  margin: 15px auto 5px auto;
+}
+.main__text .buttons label {
+  margin: 10px;
+}
+
+.item {
+  margin: 20px auto;
+  width: 80%;
+}
+.item h2 {
+  color: rgb(250, 137, 156);
+  text-align: center;
+  font-size: 1.9em;
+}
+.item .text span {
+  color: #393F82;
+}
+.item .calendar {
+  width: 98%;
+  height: 83vh;
+  top: 20px;
+  border-radius: 5px;
+  margin: auto;
+  background-color: rgb(128, 128, 187);
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: auto;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.item .calendar .close {
+  float: right;
+  cursor: pointer;
+}
+.item .calendar .close i {
+  color: rgb(250, 137, 156);
+}
+.item .calendar .close:hover {
+  font-size: larger;
+}
+.item .calendar h3 {
+  font-size: 1.3em;
+}
+.item .calendar .weeks {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto;
+  flex-wrap: wrap;
+}
+.item .calendar .weeks .week {
+  margin: 10px;
+  height: auto;
+  border-radius: 5px;
+  border: 1px rgb(93, 93, 172) solid;
+  flex: 1;
+}
+.item .calendar .weeks .week h4 {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+.item .calendar .weeks .week h4 ul li {
+  list-style: none;
+}
+.item .calendar .weeks .box {
+  border: rgb(250, 137, 156) 5px solid;
+  color: #393F82;
+}
+.footer {
+  text-align: center;
+}
+.footer ul {
+  margin: auto;
+}
+.footer ul li {
+  display: inline;
+  color: black;
+  margin: 10px;
+}
+.footer ul li a {
+  color: black;
+}
+
+/*responsive*/
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .main {
+    width: 95%;
+    height: 40vh;
+  }
+  .main__image img {
+    margin: 70px 10px 10px 50px;
+  }
+  .main__text h1 {
+    margin: 15px auto;
+  }
+}
+@media (min-width: 350px) and (max-width: 767px) {
+  h1 {
+    font-size: 1.8em;
+  }
+  .main {
+    width: 90%;
+    flex-direction: column;
+    background-position: center;
+    height: auto;
+    padding-bottom: 10px;
+  }
+  .main__text {
+    width: 100%;
+    padding: 5px;
+  }
+  .main__text h1 {
+    margin: 15px auto;
+  }
+}/*# sourceMappingURL=main.css.map */
