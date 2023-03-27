@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 
 <head>
-    <script src='https://kit.fontawesome.com/b14771b76e.js' crossorigin='anonymous'></script>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'
-        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
+    <script src="https://kit.fontawesome.com/b14771b76e.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'
-        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
     <title>Calendrier de grossesse - Accueil</title>
@@ -15,9 +15,7 @@
 </head>
 <?php include 'menu.php'; ?>
 
-
 <body>
-
     <div class='app' id='app'>
         <div class='content'>
             <div class='main'>
@@ -28,20 +26,15 @@
                     <p class='text text-center'>
                         Toutes les dates importantes de votre grossesse
                     </p>
+                    {{ detail}}
                 </div>
 
-                <p class='text text-center' v-if='errorMsg'>
-                    {{ errorMsg }}
-                </p>
-
-
-
-                <div class='items'>
-                    <div class='proceed'>
+                <div class="items">
+                    <form class='proceed' @submit.prevent='submitForm'>
                         <div class='form'>
                             <label for=''>
                                 <p>Date des dernières règles:</p>
-                                <input type='date' class='date' v-model='username'>
+                                <input type='date' class='date' v-model='formData.lastPeriodDate' name='lastPeriodDate'>
                             </label>
 
                             <div class='or'>
@@ -50,16 +43,16 @@
 
                             <label for=''>
                                 <p>Date de conception</p>
-                                <input type='date' class='date' v-model='password'>
+                                <input type='date' class='date' v-model='formData.conceptionDate' name='conceptionDate'>
                             </label>
 
                         </div>
 
-                        <button class='btn btn-primary' style='background: #f0c7c2;
-                                    border: none; color: #393F82;' @click='validateInput()'>
+                        <button type="submit" class='btn btn-primary' style='background: #f0c7c2;
+                                    border: none; color: #393F82;'>
                             Calculer
                         </button>
-                    </div>
+                    </form>
 
                     <div class='results'>
                         <h2 class='subtitle'>

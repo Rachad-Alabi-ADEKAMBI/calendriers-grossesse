@@ -1,15 +1,26 @@
+<?php
+$conceptionDate = '01/01/2023';
+
+function addDaysToDate($date, $daysToAdd)
+{
+    $date = strtotime($date);
+    $newDate = strtotime('+' . $daysToAdd . ' days', $date);
+    return date('d-m-Y', $newDate);
+}
+
+function calculDuration($date)
+{
+    $now = time();
+    $dateTimestamp = strtotime($date);
+    $difference = $now - $dateTimestamp;
+    return floor($difference / (60 * 60 * 24));
+}
+?>
+
 <!DOCTYPE html>
 <html lang='en'>
 
 <head>
-    <?php include 'parts/meta.php'; ?>
-    <script src='https://kit.fontawesome.com/b14771b76e.js' crossorigin='anonymous'></script>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'
-        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'
-        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
-
 
     <title>Calendrier de grossesse - Semaine</title>
 
@@ -17,7 +28,7 @@
 <?php include 'menu.php'; ?>
 
 <body>
-    <div class='app' id='app'>
+    <div class='app' id=''>
         <div class='content'>
             <div class='main'>
                 <div class='main__text'>
@@ -60,9 +71,12 @@
                                         class='fas fa-question'></i></a></span>
                         </h2>
                         <p class='text text-justify'>
-                            Vous êtes enceinte de: <span> {{  convertInWeeks(duration)  }}</span> <br>
-                            Durée d'aménorrhées: <span>{{ convertInWeeks(Anduration) }} </span> <br>
-                            bravo, vous avez fait: <span> {{ format((durationInDays *100)/280 ) }} % du
+                            Vous êtes enceinte de: <?= calculDuration(
+                                $conceptionDate
+                            ) ?></span> <br>
+                            Durée d'aménorrhées: <span> </span> <br>
+                            bravo, vous avez fait: <span> <?= (100 * 100) /
+                                280 ?> % du
                                 chemin</span>
                             <br>
 

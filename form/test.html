@@ -41,25 +41,54 @@
                                 <span class="glyphicon glyphicon-check"></span> {{ successMessage }}
                             </div>
 
-
-                            <div class="alert alert-danger text-center" v-if="errorMsg">
-                                <button type="button" class="close" @click="clearMessage();"><span aria-hidden="true">×</span></button>
-                                <span class="glyphicon glyphicon-check"></span> {{ errorMsg }}
-                            </div>
-
                                 <div class="form-group row">
-                                    <label class="col-md-4 col-form-label text-md-right">date des</label>
+                                    <label class="col-md-4 col-form-label text-md-right">Username</label>
                                     <div class="col-md-6">
-                                        <input type="date" ref="username" class="form-control" v-model="forValidation.username">
+                                        <input type="text" ref="username" class="form-control" v-model="forValidation.username">
+                                        <div v-if="errorUsername" class="error">{{ errorUsername }}</div>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-4 col-form-label text-md-right">conception</label>
+                                    <label class="col-md-4 col-form-label text-md-right">Password</label>
                                     <div class="col-md-6">
-                                        <input type="date" ref="password" class="form-control" v-model="forValidation.password">
+                                        <input type="password" ref="password" class="form-control" v-model="forValidation.password">
+                                        <div v-if="errorPassword" class="error">{{ errorPassword }}</div>
                                     </div>
                                 </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">Firstname</label>
+                                    <div class="col-md-6">
+                                        <input type="text" ref="firstname" class="form-control" v-model="forValidation.firstname">
+                                        <div v-if="errorFirstname" class="error">{{ errorFirstname }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">Lastname</label>
+                                    <div class="col-md-6">
+                                        <input type="text" ref="lastname" class="form-control" v-model="forValidation.lastname">
+                                        <div v-if="errorLastname" class="error">{{ errorLastname }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">Email</label>
+                                    <div class="col-md-6">
+                                        <input type="text" ref="email" class="form-control" v-model="forValidation.email">
+                                        <div v-if="errorEmail" class="error">{{ errorEmail }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">Website</label>
+                                    <div class="col-md-6">
+                                        <input type="text" ref="website" class="form-control" v-model="forValidation.website">
+                                        <div v-if="errorWebsite" class="error">{{ errorWebsite }}</div>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6 offset-md-4">
                                     <button class="btn btn-primary" @click="validateInput();"><span class="glyphicon glyphicon-check"></span> Validate</button>
                                 </div>

@@ -10,9 +10,11 @@ createApp({
       showVacancies: false,
       showOvulation: false,
       showButtons: false,
-      results: null,
-      lastPeriodDate: '',
       conceptionDate: '',
+      results: null,
+      detail: '',
+      errorMsg: '',
+      successMessage: '',
       durationInMs: '',
       durationInDays: '',
       durationInWeeks: '',
@@ -62,19 +64,44 @@ createApp({
       showCalendar: false,
       calendar: [],
       showButton: false,
-      currentWeek: ''
+      currentWeek: '',
+      lastPeriodDate: '',
+      conceptionDate: '',
+      detail: '',
+      date: ''
     }
   },
   computed: {
-    //
+    formattedDate: function() {
+      var date = new Date(this.date.replace('/', '-'));
+      date.setDate(date.getDate() + 15); // Add 15 days to the date
+     this.detail =  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
   },
-  mounted() {
-    this.proceed();
+   mounted() {
   },
   methods: {
+    formatt(date){
+      return 'ok';
+    },
+    async validateInput() {
+      if (!this.lastPeriodDate && !this.conceptionDate) {
+        // If either input is not filled, show an error message
+        this.errorMsg = "Veuillez définir le nom d'utilisateur et le mot de passe";
+      } else {
+        this.errorMsg = "";
+        try {
+          const response = await axios.post('action.php', {
+            username: this.lastPeriodDate,
+            password: this.conceptionDate
+          });
+          this.detail = '4555';
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
     proceed() {
-
-
         if (this.conceptionDate === '') {
           const startDate = new Date(this.lastPeriodDate);
           startDate.setDate(startDate.getDate() + 14);
@@ -241,7 +268,7 @@ createApp({
         this.dateCare = addDays(this.conceptionDate, days3);
         }
       },
-      proceedFert(){
+    proceedFert(){
         if(this.cycle == ''){
             alert('Veuillez insérer des informations pour le calcul')
         }else{
@@ -264,7 +291,7 @@ createApp({
 
             this.fecondDateB =  addDays(this.fecondDateA, 2);
       },
-      proceedCalendar(){
+    proceedCalendar(){
         this.selectedDate = this.conceptionDate;
         const startDate = new Date(this.selectedDate);
         const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 10, 0);
@@ -280,7 +307,7 @@ createApp({
         this.showButton = true;
        },
        formatDate(date) {
-        const formattedDate = date.toLocaleDateString('fr-FR');
+       // const formattedDate = date.toLocaleDateString('fr-FR');
         return formattedDate;
       },
       convertir(jours) {
@@ -324,8 +351,9 @@ createApp({
           day: 'numeric'
         };
         const locale = 'fr-FR';
-        const formattedDate = date.toLocaleString(locale, options);
-        return formattedDate;
+      //  const formattedDate = date.toLocaleString(locale, options);
+     //   return formattedDate;
+     return date;
       },
 
       getWeeksArray(startDate, endDate) {
@@ -333,7 +361,7 @@ createApp({
         let currentWeek = [];
         let currentDate = startDate;
         while (currentDate <= endDate) {
-          currentWeek.push(currentDate.toLocaleDateString());
+    //      currentWeek.push(currentDate.toLocaleDateString());
           currentDate.setDate(currentDate.getDate() + 1);
           if (currentDate.getDay() === 0 || currentDate > endDate) {
             weeks.push(currentWeek);
@@ -395,6 +423,7 @@ createApp({
     getImgUrl(pic) {
     return "public/img/" + pic;
 }
+
   },
 
   }).mount('#app')

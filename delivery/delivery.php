@@ -36,122 +36,143 @@ function displayDelivery()
 {
     echo "
     <div class='app' id='app'>
-    <div class='content'>
-        <div class='main'>
-            <div class='main__text'>
-                <h1 class='title'>
-                    Calendrier de grossesse
-                </h1>
-                <p class='text text-center'>
-                    Toutes les dates importantes de votre grossesse
-                </p>
-            </div>
-
-            <div class='items'>
-                <form class='proceed' action='#' method='POST'>
-                    <div class='form'>
-                        <label for=''>
-                            <p>Date des dernières règles:</p>
-                            <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
-                        </label>
-
-                        <div class='or'>
-                            Ou
-                        </div>
-
-                        <label for=''>
-                            <p>Date de conception</p>
-                            <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
-                        </label>
-
-                    </div>
-
-                    <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                                border: none; color: #393F82;'>
-                        Calculer
-                    </button>
-                </form>
-
-                <div class='results'>
-                    <h2 class='subtitle'>
-                        Mon calendrier de grossesse <span><a href='#calendar'><i
-                                    class='fas fa-question'></i></a></span>
-                    </h2>
-                    <p class='text text-justify'>
-                        Vous êtes enceinte de: <span> {{  convertInWeeks(durationInDays)  }}</span> <br>
-                        Durée d'aménorrhées: <span>{{ convertInWeeks(Anduration) }} </span> <br>
-                        bravo, vous avez fait: <span> {{ format((durationInDays *100)/280 ) }} % du
-                            chemin</span>
-                        <br>
-
+        <div class='content'>
+            <div class='main'>
+                <div class='main__text'>
+                    <h1 class='title'>
+                        Calendrier de grossesse
+                    </h1>
+                    <p class='text text-center'>
+                        Toutes les dates importantes de votre grossesse
                     </p>
                 </div>
-            </div>
-        </div>
 
-        <div class='item' id='calendar'>
-            <h2>
-                Calendrier semaine par semaine
-            </h2>
+                <div class='items'>
+                    <form class='proceed' action='#' method='POST'>
+                        <div class='form'>
+                            <label for=''>
+                                <p>Date des dernières règles:</p>
+                                <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
+                            </label>
 
-            <button class='btn btn-primary' @click='proceedCalendar()' v-if='showButton' style='background-color: #393F82;
-            color: #f0c7c2'>
-                Afficher le calendrier
-            </button>
-
-            <div class='calendar mb-3' v-if='showCalendar'>
-                <div class='close mr-2 mt-1' @click='closeCalendar()'>
-                    X
-                </div>
-                <p class='text text-center mt-2'>
-                    Semaine de grossesse: {{ currentWeek +1}}
-                </p>
-                <div class='weeks'>
-                    <div class='container'>
-                        <div class='row'>
-                            <div v-for='(week, index) in calendar' :key='index' class='week col-sm-12 col-md-2'
-                                :class='{ box: index === currentWeek }'>
-                                <h4>Semaine {{ index + 1 }}</h4>
-                                <ul>
-                                    <li v-for='(day, dayIndex) in week' :key='dayIndex'>
-                                        {{ day }}
-                                    </li>
-                                </ul>
+                            <div class='or'>
+                                Ou
                             </div>
 
+                            <label for=''>
+                                <p>Date de conception</p>
+                                <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
+                            </label>
+
                         </div>
+
+                        <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
+                                    border: none; color: #393F82;'>
+                            Calculer
+                        </button>
+                    </form>
+
+                    <div class='results'>
+                        <h2 class='subtitle'>
+                            Mon calendrier de grossesse <span><a href='#calendar'><i
+                                        class='fas fa-question'></i></a></span>
+                        </h2>
+                        <p class='text text-justify'>
+                            Date d'accouchement': <span>{{ formatDate(dueDate) }}</span> <br>
+
+                        </p>
                     </div>
                 </div>
+            </div>
 
+            <div class='item' id='calendar'>
+                <h2>
+                    CALCUL DATE ACCOUCHEMENT
+                </h2>
+
+
+                <p class='text text-justify'>
+                    Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes de la
+                    grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence généralement à la
+                    date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé, soit
+                    environ 40 semaines plus tard.
+                </p>
+            </div>
+            <hr>
+
+            <div class='item' id='vacancies'>
+                <h2>
+                    Dates congé maternité
+                </h2>
+
+                <p class='text text-justify' v-if='results != null'>
+                    <label for=''>
+                        Nombre d'enfant(s) déjà né(s) : <select name='' id='' v-model='kids' style='height: 28px'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                        </select>
+                    </label> <br>
+
+                    <label for=''>
+                        Vous êtes enceinte de <select name='' id='' v-model='kidsComing' style='height: 28px'>
+                            <option value='jumeaux'>Jumeaux</option>
+                            <option value='triples'>Triplés ou plus</option>
+                        </select>
+                    </label>
+
+                    <button class='btn btn-primary' @click='proceedVac()'
+                        style='color: #f0c7c2; margin-left: 10px; background-color: #393F82'>
+                        Calculer
+                    </button>
+                </p>
+                <br>
+
+                <p class='text text-justify' v-if='resultsVac != null'>
+                    <strong> Date limite pour déclarer votre grossesse:</strong> <span>{{ dateOfAnnounement}}</span>
+                    <br>
+
+                    <strong>Date de début de votre congé maternité: </strong> <span>{{ formatDate(dateVacA)}}</span>
+                    <br>
+                    <strong>Date de fin de votre congé maternité:</strong> <span>{{ formatDate(dateVacB)}}</span> <br>
+                    <strong>Vous serez pris en charge à 100% par l'assurance maladie à partir du:</strong>
+                    <span>{{ formatDate(dateCare) }}</span> <br>
+                </p>
+
+
+                <p class='text text-justify'>Pour bénéficier de tous vos droits, vous devez envoyer votre déclaration de
+                    grossesse
+                    dans les 14 premières semaines ou avant la fin du 3e mois.
+                    Le congé maternité est un temps de repos accordé à la mère après l'accouchement pour récupérer et
+                    prendre soin de son nouveau-né. Le calcul de la durée du congé maternité dépend en général, la durée
+                    du
+                    congé maternité est calculée à partir de la date prévue d'accouchement. Il offre également un temps
+                    précieux pour créer des liens avec le nouveau-né, allaiter et prendre soin de lui. Le congé
+                    maternité peut également aider à réduire le risque de complications de santé et à favoriser la
+                    récupération et le bien-être de la mère et du bébé.
+                </p>
+            </div>
+            <hr>
+
+            <div class='links mx-auto text-center'>
+                <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
+                    href='https://www.calendriers-grossesse.com/'>
+                    Calendrier grossesse
+                </a>
+
+                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+                    href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
+                    Calcul semaine grossesse
+                </a>
+
+                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+                    href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
+                    Calcul mois grossesse
+                </a>
 
             </div>
-            <p class='text text-justify'>
-                Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes de la
-                grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence généralement à la
-                date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé, soit
-                environ 40 semaines plus tard.
-            </p>
-        </div>
-        <hr>
-
-        <div class='links mx-auto text-center'>
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
-                Calcul semaine grossesse
-            </a>
-
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
-                Calcul mois grossesse
-            </a>
-
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
-                href='https://www.calendriers-grossesse.com/calcul-date-daccouchement/'>
-                Calcul date d'accouchement
-            </a>
         </div>
     </div>
-</div>
     ";
     wp_enqueue_script(
         'vue',

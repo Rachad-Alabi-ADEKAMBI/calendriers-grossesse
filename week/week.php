@@ -34,9 +34,13 @@ function wpse1611987_init_session()
 
 function displayWeek()
 {
+    $abc = wpse1611987_init_session();
     echo "
+
     <div class='app' id='app'>
+
     <div class='content'>
+    {{ detail }}
         <div class='main'>
             <div class='main__text'>
                 <h1 class='title'>
@@ -78,7 +82,7 @@ function displayWeek()
                                     class='fas fa-question'></i></a></span>
                     </h2>
                     <p class='text text-justify'>
-                        Vous êtes enceinte de: <span> {{  convertInWeeks(durationInDays)  }}</span> <br>
+                        Vous êtes enceinte de: <span> {{  durationInDays  }}</span> <br>
                         Durée d'aménorrhées: <span>{{ convertInWeeks(Anduration) }} </span> <br>
                         bravo, vous avez fait: <span> {{ format((durationInDays *100)/280 ) }} % du
                             chemin</span>
@@ -153,6 +157,11 @@ function displayWeek()
     </div>
 </div>
     ";
+
+    echo '<script>';
+    echo "var dateValue = '" . $abc . "';";
+    echo '</script>';
+
     wp_enqueue_script(
         'vue',
         esc_url('https://unpkg.com/vue@3/dist/vue.global.js'),

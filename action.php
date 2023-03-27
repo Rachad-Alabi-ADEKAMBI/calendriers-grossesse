@@ -16,16 +16,14 @@ function check_input($data)
 $username = check_input($_POST['username']);
 $password = check_input($_POST['password']);
 
-if ($username == '') {
-    $out['username'] = true;
-    $out['message'] = 'Username is required';
-} elseif ($password == '') {
-    $out['username'] = true;
-    $out['message'] = 'Only letters, numbers and underscore allowed';
-} else {
-    $out['message'] = $username;
+if ($password == '') {
+    $result = date('d-m-Y', strtotime($username . ' +14 days')); // ajoute 14 jours
+} elseif ($password != '' && $username != '') {
+    $result = $password;
 }
 
+$out['message'] = $result;
+
 header('Content-type: application/json');
-echo json_encode($out);
+echo json_encode($out['message']);
 die();

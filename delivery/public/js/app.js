@@ -66,13 +66,14 @@ createApp({
     }
   },
   computed: {
-
+    //
+  },
+  mounted() {
+    this.proceed();
   },
   methods: {
     proceed() {
-      if (this.lastPeriodDate === '' && this.conceptionDate === '') {
-        alert('Veuillez renseigner soit la date des dernières règles soit celle de la conception');
-      } else {
+
 
         if (this.conceptionDate === '') {
           const startDate = new Date(this.lastPeriodDate);
@@ -89,14 +90,14 @@ createApp({
         this.durationInMs = today - this.conceptionDate;
 
         if(this.durationInMs < 0){
-         alert("Merci de vérifier la date insérée");
+         alert('Merci de vérifier la date insérée');
          exit();
         }
 
        this.durationInDays = Math.floor((this.durationInMs / 1000 / 60 / 60 / 24));
 
         if(this.durationInDays > 300){
-          alert("Merci de vérifier la date insérée")
+          alert('Merci de vérifier la date insérée')
         } else{
           this.results = 'ok';
           this.showButton = true;
@@ -189,7 +190,6 @@ createApp({
           this.showVacancies = false;
           this.showOvulation = false;
         }
-      }
     },
     proceedVac(){
         //vacancies
@@ -295,12 +295,25 @@ createApp({
 
         const joursRestants = Math.floor(resteSemaines);
 
-        // Ajouter "s" si nécessaire
+
         const moisPluriel = mois > 1 ? "mois" : "mois";
         const semainesPluriel = semaines > 1 ? "semaines" : "semaine";
         const joursPluriel = joursRestants > 1 ? "jours" : "jour";
 
         return `${mois} ${moisPluriel}, ${semaines} ${semainesPluriel} et ${joursRestants} ${joursPluriel}`;
+      },
+      convertInWeeks(jours) {
+        const joursParSemaine = 7;
+
+        const semaines = Math.floor(jours / joursParSemaine);
+        const resteSemaines = jours % joursParSemaine;
+
+        const joursRestants = Math.floor(resteSemaines);
+
+        const semainesPluriel = semaines > 1 ? "semaines" : "semaine";
+        const joursPluriel = joursRestants > 1 ? "jours" : "jour";
+
+        return ` ${semaines} ${semainesPluriel} et ${joursRestants} ${joursPluriel}`;
       },
 
        formatDate(date) {
