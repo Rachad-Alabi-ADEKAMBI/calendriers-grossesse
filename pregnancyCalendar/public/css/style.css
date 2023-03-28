@@ -10,7 +10,7 @@ html, body {
 .btn-primary {
   background-color: rgb(250, 137, 156);
   border: none;
-  color: rgb(250, 137, 156);
+  color: #393F82;
   border-radius: 5px;
 }
 
@@ -22,10 +22,10 @@ html, body {
 }
 
 .main {
-  width: 90%;
+  width: 80%;
   height: auto;
   border-radius: 5px;
-  margin: auto auto 40px auto;
+  margin: auto;
   display: block;
 }
 .main__text {
@@ -47,7 +47,6 @@ html, body {
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 40px;
 }
 .main .items .proceed {
   display: flex;
@@ -55,74 +54,62 @@ html, body {
   justify-content: space-between;
   flex-wrap: wrap;
   justify-content: flex-start;
-  width: 400px;
-  height: -webkit-max-content;
-  height: -moz-max-content;
-  height: max-content;
+  width: 340px;
   position: relative;
-  padding-top: 5px;
 }
 .main .items .proceed .form {
   margin-left: 15px;
   display: block;
-  width: 70%;
+  width: 60%;
 }
 .main .items .proceed .form label {
-  height: 100px;
-  width: 220px;
-  padding: 10px;
+  height: 90px;
+  width: 200px;
   border-radius: 5px;
-  background-color: rgb(238, 222, 203);
+  background-color: bisque;
   margin: 5px auto;
 }
 .main .items .proceed .form label p {
   width: 100%;
-  color: rgb(250, 137, 156);
-  font-weight: bold;
 }
 .main .items .proceed .form .or {
   margin: auto;
-  padding-left: 30%;
+  padding-left: 35%;
   font-weight: bold;
 }
 .main .items .proceed .btn {
   height: 40px;
   float: right;
-  margin: 110px auto auto -40px;
+  margin: 90px auto auto 20px;
 }
 .main .items .proceed .btn:hover {
-  background-color: rgb(250, 137, 156);
-  color: white;
+  background-color: #393F82;
+  color: rgb(250, 137, 156);
 }
 .main .items .results {
   min-height: 190px;
-  height: 250px;
-  width: 65%;
+  width: 100%;
   flex: 1;
   margin: auto 50px;
-  background-color: rgb(238, 222, 203);
+  background-color: bisque;
   border-radius: 5px;
-  padding-left: 10px;
-  position: relative;
+  padding: 5px 5px 5px 10px;
 }
 .main .items .results h2 {
-  color: rgb(250, 137, 156);
+  color: #393F82;
   font-size: 1.7em;
-  margin: 10px auto;
 }
-.main .items .results__top {
-  margin: 10px auto 15px auto;
+.main .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  left: 10px;
+  justify-content: flex-start;
+  margin: 15px auto 5px auto;
 }
-.main .items .results__top span {
-  color: rgb(250, 137, 156);
-  font-weight: bold;
-}
-.main .items .results .buttons {
-  position: absolute;
-  bottom: 5px;
-}
-.main .items .results .buttons label {
-  margin: 8px;
+.main .buttons label {
+  margin: 10px;
 }
 
 .item {
@@ -135,7 +122,7 @@ html, body {
   font-size: 1.9em;
 }
 .item .text span {
-  color: rgb(250, 137, 156);
+  color: #393F82;
 }
 .item .calendar {
   width: 98%;
@@ -187,7 +174,7 @@ html, body {
 }
 .item .calendar .weeks .box {
   border: rgb(250, 137, 156) 5px solid;
-  color: rgb(250, 137, 156);
+  color: #393F82;
 }
 .links a {
   margin: 10px;
@@ -239,4 +226,4 @@ html, body {
   .main__text h1 {
     margin: 15px auto;
   }
-}/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=main.css.map */

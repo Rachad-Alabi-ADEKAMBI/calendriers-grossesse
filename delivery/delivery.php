@@ -28,19 +28,66 @@ function wpse16119871_init_session()
     } else {
         $abc = 'NOT IN SESSION DATA';
     }
-
-    echo $abc;
 }
 
 function displayDelivery()
 {
+    $conceptionDate = '01/01/2023';
+
+    $duration = calculDuration($conceptionDate);
+
+    $convertedDuration = convertInWeeks($duration);
+
+    $convertedAnDuration = convertInWeeks(calculDuration($conceptionDate) + 14);
+
+    $dueDate = addDaysToDate($conceptionDate, 285);
+
+    $month = convertInMonths($duration);
+
+    $percentage = number_format(($duration * 100) / 285, '0', '', ' ');
+
+    $echo0A = addDaysToDate($conceptionDate, 36);
+    $echo0B = addDaysToDate($conceptionDate, 63);
+
+    $echo1A = addDaysToDate($conceptionDate, 71);
+    $echo1B = addDaysToDate($conceptionDate, 98);
+
+    $echo2A = addDaysToDate($conceptionDate, 134);
+    $echo2B = addDaysToDate($conceptionDate, 175);
+
+    $echo3A = addDaysToDate($conceptionDate, 204);
+    $echo3B = addDaysToDate($conceptionDate, 243);
+
+    $app4A = addDaysToDate($conceptionDate, 106);
+    $app4B = addDaysToDate($conceptionDate, 136);
+
+    $app5A = addDaysToDate($conceptionDate, 137);
+    $app5B = addDaysToDate($conceptionDate, 167);
+
+    $app6A = addDaysToDate($conceptionDate, 168);
+    $app6B = addDaysToDate($conceptionDate, 198);
+
+    $app7A = addDaysToDate($conceptionDate, 200);
+    $app7B = addDaysToDate($conceptionDate, 227);
+
+    $app8A = addDaysToDate($conceptionDate, 228);
+    $app8B = addDaysToDate($conceptionDate, 257);
+
+    $app9A = addDaysToDate($conceptionDate, 258);
+    $app9B = addDaysToDate($conceptionDate, 287);
+
+    $prematureDate = addDaysToDate($conceptionDate, 253);
+    $anesth = addDaysToDate($conceptionDate, 257);
+    $vagA = addDaysToDate($conceptionDate, 239);
+    $vagB = addDaysToDate($conceptionDate, 266);
+
     echo "
     <div class='app' id='app'>
         <div class='content'>
             <div class='main'>
                 <div class='main__text'>
                     <h1 class='title'>
-                        Calendrier de grossesse
+                       CALENDRIERS-GROSSESSE
                     </h1>
                     <p class='text text-center'>
                         Toutes les dates importantes de votre grossesse
@@ -60,27 +107,29 @@ function displayDelivery()
                             </div>
 
                             <label for=''>
-                                <p>Date de conception</p>
+                                <p>Date de conception:</p>
                                 <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
                             </label>
 
                         </div>
 
                         <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                                    border: none; color: #393F82;'>
+                                    border: none; color: black;'>
                             Calculer
                         </button>
                     </form>
 
                     <div class='results'>
-                        <h2 class='subtitle'>
-                            Mon calendrier de grossesse <span><a href='#calendar'><i
-                                        class='fas fa-question'></i></a></span>
-                        </h2>
-                        <p class='text text-justify'>
-                            Date d'accouchement': <span>{{ formatDate(dueDate) }}</span> <br>
+                       <div class='results__top'>
+                       <h2 class='subtitle'>
+                       Mon calendrier de grossesse <span><a href='#calendar'><i
+                                   class='fas fa-question'></i></a></span>
+                   </h2>
+                   <p class='text text-justify'>
+                       Date d'accouchement prévue': <span> $dueDate </span> <br>
 
-                        </p>
+                   </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,17 +141,20 @@ function displayDelivery()
 
 
                 <p class='text text-justify'>
-                    Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes de la
-                    grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence généralement à la
-                    date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé, soit
-                    environ 40 semaines plus tard.
+                La date d'accouchement prévue ou présumée (DPA) est une étape importante pour les femmes enceintes et leurs médecins. Cette date est calculée à partir de la date de conception. En théorie, il suffit d'ajouter neuf mois à la date de début de grossesse pour déterminer la DPA.
+                    <br><br>
+                Cependant, il est important de noter que chaque femme est différente et que la durée de la grossesse peut varier d'une personne à l'autre. De plus, la date de conception peut être difficile à déterminer avec précision, surtout si une femme a des cycles menstruels irréguliers. C'est pourquoi les médecins utilisent souvent des méthodes plus précises pour estimer la date d'accouchement, telles que l'échographie.
+                <br><br>
+                La date d'accouchement prévue est importante car elle permet aux femmes enceintes de se préparer mentalement et physiquement pour l'arrivée de leur bébé. Cependant, il est important de noter que la DPA n'est qu'une estimation et que l'accouchement peut se produire à tout moment, que ce soit avant ou après la date prévue.
+                <br><br>
+                En cas de dépassement de la DPA, les médecins peuvent recommander des mesures pour déclencher l'accouchement, telles que l'administration d'ocytocine ou une césarienne. Cependant, il est important de noter que chaque grossesse est unique et que les décisions concernant l'accouchement doivent être prises au cas par cas, en tenant compte de la santé de la mère et du bébé.
                 </p>
             </div>
             <hr>
 
             <div class='item' id='vacancies'>
                 <h2>
-                    Dates congé maternité
+                    DATES CONGES MATERNITE
                 </h2>
 
                 <p class='text text-justify' v-if='results != null'>
@@ -225,7 +277,7 @@ function displayDelivery()
     );
 }
 
-add_shortcode('delivery', 'displayDelivery');
+add_shortcode('due', 'displayDelivery');
 // Start session on init hook.
 add_action('init', 'wpse16119871_init_session');
 //add_action('wp_enqueue_scripts', 'displaySolidaire');

@@ -1,16 +1,62 @@
+<?php
+$conceptionDate = '01/01/2023';
+
+function addDaysToDate($date, $daysToAdd)
+{
+    $date = strtotime($date);
+    $newDate = strtotime('+' . $daysToAdd . ' days', $date);
+    return date('d-m-Y', $newDate);
+}
+
+function calculDuration($date)
+{
+    $now = time();
+    $dateTimestamp = strtotime($date);
+    $difference = $now - $dateTimestamp;
+    return floor($difference / (60 * 60 * 24));
+}
+
+function convertInWeeks($nb_jours)
+{
+    $nb_semaines = floor($nb_jours / 7); // Calculer le nombre de semaines entières
+    $nb_jours_restants = $nb_jours % 7; // Calculer le nombre de jours restants
+
+    // Construire la chaîne de caractères résultante
+    $resultat = '';
+    if ($nb_semaines > 0) {
+        $resultat .=
+            $nb_semaines . ' semaine' . ($nb_semaines > 1 ? 's' : '') . ' ';
+    }
+    if ($nb_jours_restants > 0) {
+        $resultat .=
+            $nb_jours_restants .
+            ' jour' .
+            ($nb_jours_restants > 1 ? 's' : '') .
+            ' ';
+    }
+
+    return trim($resultat); // Retourner le résultat en enlevant les espaces en trop
+}
+
+function convertInMonths($nb_jours)
+{
+    $nb_mois = floor($nb_jours / 30); // Calculer le nombre de mois entiers
+
+    // Construire la chaîne de caractères résultante
+    $resultat = '';
+    if ($nb_mois > 0) {
+        $resultat .= $nb_mois . ($nb_mois > 1 ? 'ème' : 'er') . ' mois';
+    }
+
+    return $resultat;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang='en'>
 
 <head>
-
-    <script src='https://kit.fontawesome.com/b14771b76e.js' crossorigin='anonymous'></script>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'
-        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'
-        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
-    <link href='public/scss/main.css' rel='stylesheet'>
-
 
     <title>Calendrier de grossesse - Mois</title>
 
@@ -62,9 +108,15 @@
                                         class='fas fa-question'></i></a></span>
                         </h2>
                         <p class='text text-justify'>
-                            Vous êtes enceinte de: <span> {{  convertInMonths(durationInDays)  }} </span> <br>
-                            bravo, vous avez fait: <span> {{ format((durationInDays *100)/280 ) }} % du
-                                chemin</span>
+                            Vous êtes actuellement dans le : <span> <?= convertInMonths(
+                                calculDuration($conceptionDate)
+                            ) ?> </span> <br>
+                            Bravo, êtes à : <span> <?= number_format(
+                                (100 * 100) / 285,
+                                '0',
+                                '',
+                                ' '
+                            ) ?> % de votre grossesse</span>
                             <br>
 
                         </p>

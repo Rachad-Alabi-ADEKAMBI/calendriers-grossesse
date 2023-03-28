@@ -28,65 +28,112 @@ function wpse16119872_init_session()
     } else {
         $abc = 'NOT IN SESSION DATA';
     }
-
-    echo $abc;
 }
 
 function displayMonth()
 {
+    $conceptionDate = '01/01/2023';
+
+    $duration = calculDuration($conceptionDate);
+
+    $convertedDuration = convertInWeeks($duration);
+
+    $convertedAnDuration = convertInWeeks(calculDuration($conceptionDate) + 14);
+
+    $month = convertInMonths($duration);
+
+    $percentage = number_format(($duration * 100) / 285, '0', '', ' ');
+
+    $echo0A = addDaysToDate($conceptionDate, 36);
+    $echo0B = addDaysToDate($conceptionDate, 63);
+
+    $echo1A = addDaysToDate($conceptionDate, 71);
+    $echo1B = addDaysToDate($conceptionDate, 98);
+
+    $echo2A = addDaysToDate($conceptionDate, 134);
+    $echo2B = addDaysToDate($conceptionDate, 175);
+
+    $echo3A = addDaysToDate($conceptionDate, 204);
+    $echo3B = addDaysToDate($conceptionDate, 243);
+
+    $app4A = addDaysToDate($conceptionDate, 106);
+    $app4B = addDaysToDate($conceptionDate, 136);
+
+    $app5A = addDaysToDate($conceptionDate, 137);
+    $app5B = addDaysToDate($conceptionDate, 167);
+
+    $app6A = addDaysToDate($conceptionDate, 168);
+    $app6B = addDaysToDate($conceptionDate, 198);
+
+    $app7A = addDaysToDate($conceptionDate, 200);
+    $app7B = addDaysToDate($conceptionDate, 227);
+
+    $app8A = addDaysToDate($conceptionDate, 228);
+    $app8B = addDaysToDate($conceptionDate, 257);
+
+    $app9A = addDaysToDate($conceptionDate, 258);
+    $app9B = addDaysToDate($conceptionDate, 287);
+
+    $prematureDate = addDaysToDate($conceptionDate, 253);
+    $anesth = addDaysToDate($conceptionDate, 257);
+    $vagA = addDaysToDate($conceptionDate, 239);
+    $vagB = addDaysToDate($conceptionDate, 266);
     echo "
     <div class='app' id='app'>
     <div class='content'>
-        <div class='main'>
-            <div class='main__text'>
-                <h1 class='title'>
-                    Calendrier de grossesse
-                </h1>
-                <p class='text text-center'>
-                    Toutes les dates importantes de votre grossesse
-                </p>
+    <div class='main'>
+    <div class='main__text'>
+        <h1 class='title'>
+            CALENDRIERS-GROSSESSE
+        </h1>
+        <p class='text text-center'>
+            Toutes les dates importantes de votre grossesse
+        </p>
+    </div>
+
+    <div class='items'>
+        <form class='proceed' action='#' method='POST'>
+            <div class='form'>
+                <label for=''>
+                    <p>Date des dernières règles:</p>
+                    <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
+                </label>
+
+                <div class='or'>
+                    Ou
+                </div>
+
+                <label for=''>
+                    <p>Date de conception</p>
+                    <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
+                </label>
+
             </div>
 
-            <div class='items'>
-                <form class='proceed' action='#' method='POST'>
-                    <div class='form'>
-                        <label for=''>
-                            <p>Date des dernières règles:</p>
-                            <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
-                        </label>
+            <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
+                        border: none; color: black;'>
+                Calculer
+            </button>
+        </form>
 
-                        <div class='or'>
-                            Ou
-                        </div>
-
-                        <label for=''>
-                            <p>Date de conception</p>
-                            <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
-                        </label>
-
-                    </div>
-
-                    <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                                border: none; color: #393F82;'>
-                        Calculer
-                    </button>
-                </form>
-
-                <div class='results'>
+        <div class='results'>
+            <div class='results__top'>
                     <h2 class='subtitle'>
-                        Mon calendrier de grossesse <span><a href='#calendar'><i
-                                    class='fas fa-question'></i></a></span>
-                    </h2>
-                    <p class='text text-justify'>
-                        Vous êtes enceinte de: <span> {{  convertInMonths(durationInDays)  }} </span> <br>
-                        bravo, vous avez fait: <span> {{ format((durationInDays *100)/280 ) }} % du
-                            chemin</span>
-                        <br>
+                    Mon calendrier de grossesse <span><a href='#calendar'><i
+                                class='fas fa-question'></i></a></span>
+                </h2>
+                <p class='text text-justify'>
+                  Aujourd'hui, vous êtes dans votre <span>$month de grossesse</span> <br>
+                    bravo, vous avez fait: <span> $percentage % du
+                        chemin</span>
+                    <br>
 
-                    </p>
-                </div>
+        </p>
+
             </div>
         </div>
+    </div>
+</div>
 
         <div class='item' id='calendar'>
             <h2>
@@ -131,38 +178,31 @@ function displayMonth()
                 environ 40 semaines plus tard.
             </p>
         </div>
+
         <hr>
 
         <div class='item' id='echography'>
             <h2>
-                Calendrier des echographies
+                CALENDRIER DES ECHOGRAPHIES
             </h2>
 
-            <p class='text text-justify' v-if='results != null'>
-                <strong>Echographie précoce:</strong> entre le <span>{{ formatDate(dateEco0A) }} </span> et
-                le
-                <span> {{ formatDate(dateEco0B) }}
-                </span>
+            <p class='text text-justify'>
+                Echographie précoce: entre le <span> $echo0A</span>
+                et le <span> $echo0B </span>
                 <br>
 
-                <strong>1ère échographie recommandée:</strong>
-                entre le <span>{{ formatDate(dateEco1A) }}</span> et le
-                <span>{{ formatDate(dateEco1B)}}</span> <br>
+                1ère échographie recommandée: entre le <span> $echo1A </span> et le
+                <span> $echo1B </span> <br>
 
-                <strong>2ème échographie recommandée:</strong>
-                entre le <span>{{ formatDate(dateEco2A ) }}</span> et le
-                <span>{{ formatDate(dateEco2B) }}</span> <br>
+                2ème échographie recommandée: entre le <span> $echo2A </span>
+                et le <span> $echo2B </span> <br>
 
-                <strong>3ème échographie:</strong>
-                entre le <span>{{ formatDate(dateEco3A) }}</span> et le
-                <span>{{ formatDate(dateEco3B) }}</span>
+                3ème échographie recommandée:
+                entre le <span> $echo3A </span> et le
+                <span> $echo3B </span>
             </p>
 
             <p class='text text-justify'>
-                <strong>L'échographie</strong> doit être réalisée entre 8 S.A. et 9S.A. <br>
-                <strong>La première échographie</strong> doit être réalisée entre 11 S.A. et 13 S.A.+6. <br>
-                <strong>La deuxième échographie</strong> est réalisée entre 22S.A. et 24S.A. <br>
-                <strong>La troisième échographie</strong> est réalisée entre 32S.A. et 34S.A.. <br>
                 Les échographies sont cruciales pour évaluer la croissance et la santé du fœtus. Elles permettent de
                 vérifier la vitalité du fœtus, son âge gestationnel, la position de placenta, la quantité de liquide
                 amniotique et les malformations. Les échographies peuvent être recommandées à différents moments de
@@ -170,47 +210,44 @@ function displayMonth()
                 sont généralement sans danger pour la mère et le fœtus.
             </p>
         </div>
-        <hr>
+    <hr>
 
-        <div class='item' id='appointments'>
-            <h2>
-                Calendrier des consultations prénatales
-            </h2>
+    <div class='item' id='appointments'>
+        <h2>
+            CALENDRIER DES CONSULTATIONS PRENATALES
+        </h2>
 
-            <p class='text text-justify' v-if='results != null'>
-                <strong> 4ème mois de grossesse:</strong> entre le <span>{{ formatDate(dateCons4A) }}</span>
-                et le
-                <span>{{ formatDate(dateCons4B) }} </span> <br>
+        <p class='text text-justify'>
+            4ème mois de grossesse: entre le <span> $app4A</span> et le
+            <span> $app4B </span> <br>
 
-                <strong>5ème mois de grossesse:</strong> entre le <span>{{ formatDate(dateCons5A) }}</span>
-                et le
-                <span>{{ formatDate(dateCons5B) }} </span> <br>
+            5ème mois de grossesse: entre le <span> $app5A </span> et le
+            <span>$app5B </span> <br>
 
-                <strong>6ème mois de grossesse:</strong> entre le <span>{{ formatDate(dateCons6A) }}</span>
-                et le
-                <span>{{ formatDate(dateCons6B) }} </span> <br>
+            6ème mois de grossesse: entre le <span> $app6A </span> et le
+            <span> $app6B </span> <br>
 
-                <strong>7ème mois de grossesse:</strong> entre le <span>{{ formatDate(dateCons7A) }}</span>
-                et le
-                <span>{{ formatDate(dateCons7B) }} </span> <br>
+            7ème mois de grossesse: entre le <span> $app7A </span> et le
+            <span> $app7B </span> <br>
 
-                <strong> 8ème mois de grossesse:</strong> entre le <span>{{ formatDate(dateCons8A) }}</span>
-                et le
-                <span>{{ formatDate(dateCons8B) }} </span> <br>
+            8ème mois de grossesse: entre le <span>$app8A </span> et le
+            <span> $app8B </span> <br>
 
-                <strong> 9ème mois de grossesse:</strong> entre le <span>{{ formatDate(dateCons9A) }}</span>
-                et le
-                <span>{{ formatDate(dateCons9B) }} </span>
-            </p>
+            9ème mois de grossesse: entre le <span> $app9A </span> et le
+            <span> $app9B </span>
+        </p>
 
-            <p class='text text-justify'>
-                Le calcul des dates pendant la grossesse permet de déterminer la date d'accouchement et de suivre le
-                développement du bébé. Les consultations prénatales sont essentielles pour surveiller la santé de la
-                mère et du bébé, détecter d'éventuels problèmes et fournir des informations et un soutien émotionnel
-                et psychologique.
-            </p>
-        </div>
-        <hr>
+        <p class='text text-justify'>
+            Le calcul des dates pendant la grossesse permet de déterminer la date d'accouchement et de
+            suivre le
+            développement du bébé. Les consultations prénatales sont essentielles pour surveiller la
+            santé de la
+            mère et du bébé, détecter d'éventuels problèmes et fournir des informations et un soutien
+            émotionnel
+            et psychologique.
+        </p>
+    </div>
+    <hr>
 
         <div class='links mx-auto text-center'>
             <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
@@ -282,7 +319,7 @@ function displayMonth()
     );
 }
 
-add_shortcode('week', 'displayMonth');
+add_shortcode('month', 'displayMonth');
 // Start session on init hook.
 add_action('init', 'wpse16119872_init_session');
 //add_action('wp_enqueue_scripts', 'displaySolidaire');

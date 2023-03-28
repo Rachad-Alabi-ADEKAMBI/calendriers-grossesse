@@ -3,18 +3,16 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      showResults: true,
+      showResults: false,
       showEchography: false,
       showAppointments: false,
       showMore: false,
       showVacancies: false,
       showOvulation: false,
-      showButtons: true,
-      conceptionDate: '',
+      showButtons: false,
       results: null,
-      detail: '',
-      errorMsg: '',
-      successMessage: '',
+      lastPeriodDate: '',
+      conceptionDate: '',
       durationInMs: '',
       durationInDays: '',
       durationInWeeks: '',
@@ -64,44 +62,19 @@ createApp({
       showCalendar: false,
       calendar: [],
       showButton: false,
-      currentWeek: '',
-      lastPeriodDate: '',
-      conceptionDate: '',
-      detail: '',
-      date: ''
+      currentWeek: ''
     }
   },
   computed: {
-    formattedDate: function() {
-      var date = new Date(this.date.replace('/', '-'));
-      date.setDate(date.getDate() + 15); // Add 15 days to the date
-     this.detail =  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
+    //
   },
-   mounted() {
+  mounted() {
+    this.proceed();
   },
   methods: {
-    formatt(date){
-      return 'ok';
-    },
-    async validateInput() {
-      if (!this.lastPeriodDate && !this.conceptionDate) {
-        // If either input is not filled, show an error message
-        this.errorMsg = "Veuillez définir le nom d'utilisateur et le mot de passe";
-      } else {
-        this.errorMsg = "";
-        try {
-          const response = await axios.post('action.php', {
-            username: this.lastPeriodDate,
-            password: this.conceptionDate
-          });
-          this.detail = '4555';
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
     proceed() {
+
+
         if (this.conceptionDate === '') {
           const startDate = new Date(this.lastPeriodDate);
           startDate.setDate(startDate.getDate() + 14);
@@ -268,7 +241,7 @@ createApp({
         this.dateCare = addDays(this.conceptionDate, days3);
         }
       },
-    proceedFert(){
+      proceedFert(){
         if(this.cycle == ''){
             alert('Veuillez insérer des informations pour le calcul')
         }else{
@@ -291,7 +264,7 @@ createApp({
 
             this.fecondDateB =  addDays(this.fecondDateA, 2);
       },
-    proceedCalendar(){
+      proceedCalendar(){
         this.selectedDate = this.conceptionDate;
         const startDate = new Date(this.selectedDate);
         const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 10, 0);
@@ -307,7 +280,7 @@ createApp({
         this.showButton = true;
        },
        formatDate(date) {
-       // const formattedDate = date.toLocaleDateString('fr-FR');
+        const formattedDate = date.toLocaleDateString('fr-FR');
         return formattedDate;
       },
       convertir(jours) {
@@ -329,19 +302,6 @@ createApp({
 
         return `${mois} ${moisPluriel}, ${semaines} ${semainesPluriel} et ${joursRestants} ${joursPluriel}`;
       },
-      convertInWeeks(jours) {
-        const joursParSemaine = 7;
-
-        const semaines = Math.floor(jours / joursParSemaine);
-        const resteSemaines = jours % joursParSemaine;
-
-        const joursRestants = Math.floor(resteSemaines);
-
-        const semainesPluriel = semaines > 1 ? "semaines" : "semaine";
-        const joursPluriel = joursRestants > 1 ? "jours" : "jour";
-
-        return ` ${semaines} ${semainesPluriel} et ${joursRestants} ${joursPluriel}`;
-      },
 
        formatDate(date) {
         const options = {
@@ -351,9 +311,8 @@ createApp({
           day: 'numeric'
         };
         const locale = 'fr-FR';
-      //  const formattedDate = date.toLocaleString(locale, options);
-     //   return formattedDate;
-     return date;
+        const formattedDate = date.toLocaleString(locale, options);
+        return formattedDate;
       },
 
       getWeeksArray(startDate, endDate) {
@@ -361,7 +320,7 @@ createApp({
         let currentWeek = [];
         let currentDate = startDate;
         while (currentDate <= endDate) {
-    //      currentWeek.push(currentDate.toLocaleDateString());
+          currentWeek.push(currentDate.toLocaleDateString());
           currentDate.setDate(currentDate.getDate() + 1);
           if (currentDate.getDay() === 0 || currentDate > endDate) {
             weeks.push(currentWeek);
@@ -369,16 +328,6 @@ createApp({
           }
         }
         return weeks;
-      },
-
-      displayResults() {
-        this.showResults = true;
-        this.showButtons = true;
-        this.showEchography = false;
-        this.showAppointments = false;
-        this.showMore = false;
-        this.showVacancies = false;
-        this.showOvulation = false;
       },
 
     displayEchography() {
@@ -433,7 +382,6 @@ createApp({
     getImgUrl(pic) {
     return "public/img/" + pic;
 }
-
   },
 
   }).mount('#app')
