@@ -1,8 +1,9 @@
 @import url('https://fonts.cdnfonts.com/css/verdana');
 
-$pink: rgb(250, 137, 156);
-$bisque:  rgb(238, 222, 203);
+$pink: #fa899c;
+$bisque:  #eedecb;
 $red: #FF4133;
+$btn: #f0c7c2;
 
 @mixin  flex ($flex-direction: row) {
     display: flex;
@@ -49,6 +50,9 @@ html, body{
         h1{
             margin: 15px auto;
             color: $pink;
+            span{
+                display: none;
+            }
 
         }
 
@@ -153,84 +157,69 @@ html, body{
     h2{
         color: $pink;
         text-align: center;
-        font-size: 1.9em;
+        font-size: 1.7em;
     }
 
     .text{
         span{
             color: $pink;
-
         }
     }
 
-    .calendar{
-        width: 98%;
-        height: 83vh;
-        top: 20px;
+    table {
+        border: 1px solid black;
+    }
+
+    .weeks {
+        background-color: $bisque;
+        width: 80%;
+        margin: auto;
+        padding-top: 10px;
         border-radius: 5px;
-        margin:  auto;
-        background-color: rgb(128, 128, 187);
-        background-position: left;
-        background-repeat: no-repeat;
-        background-size: auto;
-        overflow: hidden;
-        overflow-y: scroll;
-
-        .close{
-            float: right;
-            cursor: pointer;
-
-            i{
-                color: $pink;
-            }
-        }
-
-        .close:hover{
-            font-size: larger;
-        }
-
-        h3{
-            font-size: 1.3em;
-        }
-
-        .weeks{
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            margin: auto;
-            flex-wrap: wrap;
-
-            .week{
-                margin: 10px;
-                height: auto;
-                border-radius: 5px;
-                border: 1px rgb(93, 93, 172) solid;
-                flex: 1;
-
-                h4{
-                    font-size: 1.1em;
-                    font-weight: bold;
-
-                    ul{
-                        li{
-                            list-style: none;
-                        }
-                    }
-                }
-              }
-
-              .box{
-                border: $pink 5px solid;
-                color: $pink;
-              }
-        }
-
-            .week{
-
-            }
-
+        padding-bottom: 10px;
     }
+
+    .week {
+        border: 1px solid black;
+        padding-top: 7px;
+    }
+
+    .current-week {
+        border: 8px solid $pink;
+    }
+
+
+table {
+    border: 1px solid black;
+}
+
+.months {
+    background-color: #fce4d6;
+    width: 80%;
+    margin: auto;
+    padding-top: 10px;
+    border-radius: 5px;
+}
+
+.month {
+    border: 1px solid black;
+    padding-top: 7px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.current-month {
+    border: 10px solid #fa899c;
+}
+
+.text {
+    width: 100%;
+}
+
+
+
 }
 
 .links{

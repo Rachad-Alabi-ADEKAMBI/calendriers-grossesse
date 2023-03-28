@@ -8,9 +8,9 @@ html, body {
 }
 
 .btn-primary {
-  background-color: rgb(250, 137, 156);
+  background-color: #fa899c;
   border: none;
-  color: rgb(250, 137, 156);
+  color: #fa899c;
   border-radius: 5px;
 }
 
@@ -35,10 +35,13 @@ html, body {
 }
 .main__text h1 {
   margin: 15px auto;
-  color: rgb(250, 137, 156);
+  color: #fa899c;
+}
+.main__text h1 span {
+  display: none;
 }
 .main__text p {
-  color: rgb(250, 137, 156);
+  color: #fa899c;
   margin-top: -15px;
   font-weight: bold;
 }
@@ -72,12 +75,12 @@ html, body {
   width: 220px;
   padding: 10px;
   border-radius: 5px;
-  background-color: rgb(238, 222, 203);
+  background-color: #eedecb;
   margin: 5px auto;
 }
 .main .items .proceed .form label p {
   width: 100%;
-  color: rgb(250, 137, 156);
+  color: #fa899c;
   font-weight: bold;
 }
 .main .items .proceed .form .or {
@@ -91,7 +94,7 @@ html, body {
   margin: 110px auto auto -40px;
 }
 .main .items .proceed .btn:hover {
-  background-color: rgb(250, 137, 156);
+  background-color: #fa899c;
   color: white;
 }
 .main .items .results {
@@ -100,13 +103,13 @@ html, body {
   width: 65%;
   flex: 1;
   margin: auto 50px;
-  background-color: rgb(238, 222, 203);
+  background-color: #eedecb;
   border-radius: 5px;
   padding-left: 10px;
   position: relative;
 }
 .main .items .results h2 {
-  color: rgb(250, 137, 156);
+  color: #fa899c;
   font-size: 1.7em;
   margin: 10px auto;
 }
@@ -114,7 +117,7 @@ html, body {
   margin: 10px auto 15px auto;
 }
 .main .items .results__top span {
-  color: rgb(250, 137, 156);
+  color: #fa899c;
   font-weight: bold;
 }
 .main .items .results .buttons {
@@ -130,65 +133,56 @@ html, body {
   width: 80%;
 }
 .item h2 {
-  color: rgb(250, 137, 156);
+  color: #fa899c;
   text-align: center;
-  font-size: 1.9em;
+  font-size: 1.7em;
 }
 .item .text span {
-  color: rgb(250, 137, 156);
+  color: #fa899c;
 }
-.item .calendar {
-  width: 98%;
-  height: 83vh;
-  top: 20px;
-  border-radius: 5px;
+.item table {
+  border: 1px solid black;
+}
+.item .weeks {
+  background-color: #eedecb;
+  width: 80%;
   margin: auto;
-  background-color: rgb(128, 128, 187);
-  background-position: left;
-  background-repeat: no-repeat;
-  background-size: auto;
-  overflow: hidden;
-  overflow-y: scroll;
+  padding-top: 10px;
+  border-radius: 5px;
+  padding-bottom: 10px;
 }
-.item .calendar .close {
-  float: right;
-  cursor: pointer;
+.item .week {
+  border: 1px solid black;
+  padding-top: 7px;
 }
-.item .calendar .close i {
-  color: rgb(250, 137, 156);
+.item .current-week {
+  border: 8px solid #fa899c;
 }
-.item .calendar .close:hover {
-  font-size: larger;
+.item table {
+  border: 1px solid black;
 }
-.item .calendar h3 {
-  font-size: 1.3em;
+.item .months {
+  background-color: #fce4d6;
+  width: 80%;
+  margin: auto;
+  padding-top: 10px;
+  border-radius: 5px;
 }
-.item .calendar .weeks {
-  width: 100%;
+.item .month {
+  border: 1px solid black;
+  padding-top: 7px;
+  height: 100px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: auto;
-  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
-.item .calendar .weeks .week {
-  margin: 10px;
-  height: auto;
-  border-radius: 5px;
-  border: 1px rgb(93, 93, 172) solid;
-  flex: 1;
+.item .current-month {
+  border: 10px solid #fa899c;
 }
-.item .calendar .weeks .week h4 {
-  font-size: 1.1em;
-  font-weight: bold;
+.item .text {
+  width: 100%;
 }
-.item .calendar .weeks .week h4 ul li {
-  list-style: none;
-}
-.item .calendar .weeks .box {
-  border: rgb(250, 137, 156) 5px solid;
-  color: rgb(250, 137, 156);
-}
+
 .links a {
   margin: 10px;
 }

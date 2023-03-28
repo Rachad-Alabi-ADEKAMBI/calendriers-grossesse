@@ -1,5 +1,37 @@
 <?php
-$conceptionDate = '01/01/2023';
+session_start();
+
+if (!empty($_POST)) {
+    $conceptionDate = null;
+    if (isset($_POST['lastPeriodDate'])) {
+        // Calculate the conception date by adding 14 days to 'lastPeriodDate'
+        $conceptionDate = strtotime($_POST['lastPeriodDate'] . ' +14 days');
+        $conceptionDate = date('d-m-Y', $conceptionDate);
+    } else {
+        $conceptionDate = $_SESSION['preg']['conceptionDate'];
+    }
+
+    if (isset($_POST['kids'])) {
+        $kids = $_POST['kids'];
+    }
+
+    if (isset($_POST['comingKids'])) {
+        $comingKids = $_POST['comingKids'];
+    }
+
+    // Save the $conceptionDate to the $_SESSION superglobal under the 'preg' key
+    $_SESSION['preg'] = [
+        'conceptionDate' => $conceptionDate,
+        'kids' => $kids,
+        'comingKids' => $comingKids,
+    ];
+}
+
+// Check if the $_POST superglobal is not empty
+
+echo $_SESSION['preg']['conceptionDate'];
+echo $_SESSION['preg']['kids'];
+echo $_SESSION['preg']['comingKids'];
 
 function addDaysToDate($date, $daysToAdd)
 {
@@ -231,7 +263,7 @@ $vagB = addDaysToDate($conceptionDate, 266);
                             <form action='#' method='POST'>
                                 <p class='text text-justify'>
                                     <label for=''>
-                                        Nombre d'enfant(s) déjà né(s) : <select name='' id='' v-model='kids'>
+                                        Nombre d'enfant(s) déjà né(s) : <select name='kids' id='' v-model='kids'>
                                             <option value='0'>0</option>
                                             <option value='1'>1</option>
                                             <option value='2'>2</option>
@@ -239,14 +271,14 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                     </label> <br>
 
                                     <label for=''>
-                                        Vous êtes enceinte de <select name='' id='' v-model='kidsComing'>
+                                        Vous êtes enceinte de <select name='comingKids' v-model='kidsComing'>
                                             <option value='jumeaux'>Jumeaux</option>
                                             <option value='triples'>Triplés ou plus</option>
                                         </select>
                                     </label>
 
-                                    <button class='btn btn-primary ' @click='proceedVac()'
-                                        style='background-color: rgb(250, 137, 156); color: white; margin-left: 10px'>
+                                    <button class='btn btn-primary ' type='submit'
+                                        style='background-color: #fa899c; color: white; margin-left: 10px'>
                                         Calculer
                                     </button>
                                 </p>

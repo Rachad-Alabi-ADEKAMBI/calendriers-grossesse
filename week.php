@@ -51,6 +51,29 @@ function convertInMonths($nb_jours)
 
     return $resultat;
 }
+
+function getWeeksArray($startDate, $endDate)
+{
+    $weeks = [];
+    $currentWeek = [];
+    $currentDate = new DateTime($startDate);
+    while ($currentDate <= new DateTime($endDate)) {
+        $currentWeek[] = $currentDate->format('Y-m-d');
+        $currentDate->add(new DateInterval('P1D'));
+        if (
+            $currentDate->format('w') === '0' ||
+            $currentDate > new DateTime($endDate)
+        ) {
+            $weeks[] = $currentWeek;
+            $currentWeek = [];
+        }
+    }
+    return $weeks;
+}
+
+$today = new DateTime();
+$conceptionDatee = '01/01/2023';
+$weeksArray = getWeeksArray($conceptionDatee, '2023-12-28');
 ?>
 
 <!DOCTYPE html>
@@ -64,12 +87,14 @@ function convertInMonths($nb_jours)
 <?php include 'menu.php'; ?>
 
 <body>
-    <div class='app' id=''>
+    <div class='app' id='app'>
+
         <div class='content'>
+
             <div class='main'>
                 <div class='main__text'>
                     <h1 class='title'>
-                        Calendrier de grossesse
+                        CALENDRIERS GROSSESSE
                     </h1>
                     <p class='text text-center'>
                         Toutes les dates importantes de votre grossesse
@@ -81,7 +106,7 @@ function convertInMonths($nb_jours)
                         <div class='form'>
                             <label for=''>
                                 <p>Date des dernières règles:</p>
-                                <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
+                                <input type='date' class='date' name='lastPeriodDate'>
                             </label>
 
                             <div class='or'>
@@ -89,14 +114,14 @@ function convertInMonths($nb_jours)
                             </div>
 
                             <label for=''>
-                                <p>Date de conception</p>
-                                <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
+                                <p>Date de conception:</p>
+                                <input type='date' class='date' name='conceptionDate'>
                             </label>
 
                         </div>
 
-                        <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                                    border: none; color: #393F82;'>
+                        <button type='submit' class='btn btn-primary' style='background: #f0c7c2;
+                            border: none; color: black;'>
                             Calculer
                         </button>
                     </form>
@@ -108,27 +133,13 @@ function convertInMonths($nb_jours)
                                             class='fas fa-question'></i></a></span>
                             </h2>
                             <p class='text text-justify'>
-                                Vous êtes enceinte de: <?= convertInWeeks(
-                                    calculDuration($conceptionDate)
-                                ) ?></span> <br>
-                                Durée d'aménorrhées: <span> <?= convertInWeeks(
-                                    calculDuration($conceptionDate)
-                                ) ?></span> <br>
-                                Vous êtes dans le : <span> <?= convertInMonths(
-                                    calculDuration($conceptionDate)
-                                ) ?> </span> <br>
-                                Bravo, êtes à : <span> <?= number_format(
-                                    (100 * 100) / 285,
-                                    '0',
-                                    '',
-                                    ' '
-                                ) ?> % de votre grossesse</span>
+                                Vous êtes enceinte de: <span> $convertedDuration </span> <br>
+                                Durée d'aménorrhées: <span> $convertedAnDuration </span> <br>
+                                bravo, vous avez fait: <span> $percentage % du
+                                    chemin</span>
                                 <br>
 
                             </p>
-                        </div>
-
-                        <div class="results__btns">
 
                         </div>
                     </div>
@@ -139,43 +150,57 @@ function convertInMonths($nb_jours)
                 <h2>
                     Calendrier semaine par semaine
                 </h2>
+                <div class='weeks'>
+                    <div class='container table'>
+                        <div class='tr row'>
+                            <?php foreach ($weeksArray as $index => $week):
 
-                <button class='btn btn-primary' @click='proceedCalendar()' v-if='showButton' style='background-color: #393F82;
-                color: #f0c7c2'>
-                    Afficher le calendrier
-                </button>
-
-                <div class='calendar mb-3' v-if='showCalendar'>
-                    <div class='close mr-2 mt-1' @click='closeCalendar()'>
-                        X
-                    </div>
-                    <p class='text text-center mt-2'>
-                        Semaine de grossesse: {{ currentWeek +1}}
-                    </p>
-                    <div class='weeks'>
-                        <div class='container'>
-                            <div class='row'>
-                                <div v-for='(week, index) in calendar' :key='index' class='week col-sm-12 col-md-2'
-                                    :class='{ box: index === currentWeek }'>
-                                    <h4>Semaine {{ index + 1 }}</h4>
-                                    <ul>
-                                        <li v-for='(day, dayIndex) in week' :key='dayIndex'>
-                                            {{ day }}
-                                        </li>
-                                    </ul>
-                                </div>
-
+                                $currentWeekClass = '';
+                                $firstDayOfCurrentWeek = new DateTime($week[0]);
+                                $lastDayOfCurrentWeek = new DateTime(
+                                    end($week)
+                                );
+                                if (
+                                    $today >= $firstDayOfCurrentWeek &&
+                                    $today <= $lastDayOfCurrentWeek
+                                ) {
+                                    $currentWeekClass = ' current-week';
+                                }
+                                ?>
+                            <div class='td week col-9 mx-auto <?= $currentWeekClass ?>'>
+                                <p class='text text-center'>Semaine <?= $index +
+                                    1 ?> Du <?= $firstDayOfCurrentWeek->format(
+     'd/m/Y'
+ ) ?> au <?= $lastDayOfCurrentWeek->format('d/m/Y') ?></p>
                             </div>
+                            <?php
+                            endforeach; ?>
                         </div>
                     </div>
-
-
                 </div>
+
+
+                <br>
                 <p class='text text-justify'>
-                    Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes de la
-                    grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence généralement à la
-                    date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé, soit
-                    environ 40 semaines plus tard.
+                    La durée de la grossesse est un sujet important pour les femmes enceintes et leurs médecins. Il est
+                    important de comprendre les différentes méthodes de calcul pour déterminer le nombre de semaines de
+                    grossesse et d'aménorrhée.
+                    <br><br>
+                    La grossesse dure en moyenne 39 semaines de grossesse et 41 semaines d'aménorrhées. Pour calculer le
+                    nombre de semaines de grossesse, il faut prendre la date de conception comme point de départ. En
+                    revanche, pour calculer le nombre de semaines d'aménorrhée, il faut prendre le premier jour des
+                    dernières règles.
+                    <br><br>
+                    Il existe une différence d'environ deux semaines entre les semaines de grossesse et les semaines
+                    d'aménorrhée. Les semaines de grossesse prennent pour référence la date de fécondation, tandis que
+                    les semaines d'aménorrhée prennent pour référence le premier jour des dernières règles. Les
+                    professionnels de santé préfèrent utiliser les semaines d'aménorrhée car la date des dernières
+                    règles est plus précise. Il est donc important de comprendre cette différence de 15 jours entre ces
+                    deux méthodes de calcul.
+                    <br><br>
+                    Enfin, le terme 'aménorrhée' signifie simplement 'absence de règle, selon le dictionnaire Larousse.
+                    Il est utilisé pour calculer la durée de la grossesse en prenant en compte le début de l'absence de
+                    règles comme point de départ.
                 </p>
             </div>
             <hr>
@@ -200,5 +225,11 @@ function convertInMonths($nb_jours)
     </div>
     <script src='./public/js/app.js'></script>
 </body>
+
+
+<style>
+
+</style>
+
 
 </html>
