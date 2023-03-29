@@ -3,14 +3,6 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      showResults: true,
-      showEchography: false,
-      showAppointments: false,
-      showMore: false,
-      showVacancies: false,
-      showOvulation: false,
-      showButtons: true,
-      conceptionDate: '',
       results: null,
       detail: '',
       errorMsg: '',
@@ -24,29 +16,7 @@ createApp({
       AndurationInDays: '',
       AndurationInDays: '',
       Anduration: '',
-      dateOfAnnounement: '',
-      dateTriso1: '',
-      dateTriso2: '',
-      dateEco0A: '',
-      dateEco0B: '',
-      dateEco1A:'',
-      dateEco1B:'',
-      dateEco2A:'',
-      dateEco2B:'',
-      dateEco3A:'',
-      dateEco3B:'',
-      dateCons4A: '',
-      dateCons4B: '',
-      dateCons5A: '',
-      dateCons5B: '',
-      dateCons6A: '',
-      dateCons6B: '',
-      dateCons7A: '',
-      dateCons7B: '',
-      dateCons8A: '',
-      dateCons8B: '',
-      dateCons9A: '',
-      dateCons9B: '',
+
       dateVacA: '',
       dateVacB:'',
       dateCare: '',
@@ -67,8 +37,7 @@ createApp({
       currentWeek: '',
       lastPeriodDate: '',
       conceptionDate: '',
-      detail: '',
-      date: ''
+      userId: ''
     }
   },
   computed: {
@@ -78,29 +47,10 @@ createApp({
      this.detail =  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     }
   },
-   mounted() {
+  mounted: function() {
+    this.userId = document.getElementById('lastPeriodDate').value;
   },
   methods: {
-    formatt(date){
-      return 'ok';
-    },
-    async validateInput() {
-      if (!this.lastPeriodDate && !this.conceptionDate) {
-        // If either input is not filled, show an error message
-        this.errorMsg = "Veuillez définir le nom d'utilisateur et le mot de passe";
-      } else {
-        this.errorMsg = "";
-        try {
-          const response = await axios.post('action.php', {
-            username: this.lastPeriodDate,
-            password: this.conceptionDate
-          });
-          this.detail = '4555';
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
     proceed() {
         if (this.conceptionDate === '') {
           const startDate = new Date(this.lastPeriodDate);
@@ -291,25 +241,7 @@ createApp({
 
             this.fecondDateB =  addDays(this.fecondDateA, 2);
       },
-    proceedCalendar(){
-        this.selectedDate = this.conceptionDate;
-        const startDate = new Date(this.selectedDate);
-        const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 10, 0);
-        const weeks = this.getWeeksArray(startDate, endDate);
-        this.calendar = weeks;
 
-          this.showCalendar = true;
-          this.showButton = false;
-
-       },
-       closeCalendar(){
-        this.showCalendar = false;
-        this.showButton = true;
-       },
-       formatDate(date) {
-       // const formattedDate = date.toLocaleDateString('fr-FR');
-        return formattedDate;
-      },
       convertir(jours) {
         const joursParMois = 30.44;
         const joursParSemaine = 7;
@@ -355,77 +287,6 @@ createApp({
      //   return formattedDate;
      return date;
       },
-
-      getWeeksArray(startDate, endDate) {
-        const weeks = [];
-        let currentWeek = [];
-        let currentDate = startDate;
-        while (currentDate <= endDate) {
-    //      currentWeek.push(currentDate.toLocaleDateString());
-          currentDate.setDate(currentDate.getDate() + 1);
-          if (currentDate.getDay() === 0 || currentDate > endDate) {
-            weeks.push(currentWeek);
-            currentWeek = [];
-          }
-        }
-        return weeks;
-      },
-
-      displayResults() {
-        this.showResults = true;
-        this.showButtons = true;
-        this.showEchography = false;
-        this.showAppointments = false;
-        this.showMore = false;
-        this.showVacancies = false;
-        this.showOvulation = false;
-      },
-
-    displayEchography() {
-      this.showResults = false;
-      this.showButtons = true;
-      this.showEchography = true;
-      this.showAppointments = false;
-      this.showMore = false;
-      this.showVacancies = false;
-      this.showOvulation = false;
-    },
-    displayVacancies() {
-      this.showResults = false;
-      this.showButtons = true;
-      this.showEchography = false;
-      this.showAppointments = false;
-      this.showMore = false;
-      this.showVacancies = true;
-      this.showOvulation = false;
-    },
-    displayAppointments(){
-        this.showResults = false;
-        this.showButtons = true;
-        this.showEchography = false;
-        this.showAppointments= true
-        this.showMore= false,
-        this.showVacancies= false,
-        this.showOvulation= false
-     },
-     displayMore(){
-        this.showResults = false;
-        this.showButtons = true;
-        this.showEchography = false;
-        this.showAppointments= false;
-        this.showMore= true;
-        this.showVacancies= false;
-        this.showOvulation= false
-     },
-     displayOvulation(){
-      this.showResults = false;
-      this.showButtons = true;
-      this.showEchography = false;
-      this.showAppointments= false;
-      this.showMore= false
-      this.showVacancies= false;
-      this.showOvulation= true
-     },
     format(num){
     let res = new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 1 }).format(num);
     return res;

@@ -99,7 +99,7 @@ function displayDelivery()
                         <div class='form'>
                             <label for=''>
                                 <p>Date des dernières règles:</p>
-                                <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
+                                <input type='date' class='date' name='lastPeriodDate'>
                             </label>
 
                             <div class='or'>
@@ -108,12 +108,12 @@ function displayDelivery()
 
                             <label for=''>
                                 <p>Date de conception:</p>
-                                <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
+                                <input type='date' class='date'  name='conceptionDate'>
                             </label>
 
                         </div>
 
-                        <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
+                        <button  type='submit' class='btn btn-primary' style='background: #f0c7c2;;
                                     border: none; color: black;'>
                             Calculer
                         </button>
@@ -122,7 +122,7 @@ function displayDelivery()
                     <div class='results'>
                        <div class='results__top'>
                        <h2 class='subtitle'>
-                       Mon calendrier de grossesse <span><a href='#calendar'><i
+                      MON CALENDRIER DE GROSSESSE <span><a href='#calendar'><i
                                    class='fas fa-question'></i></a></span>
                    </h2>
                    <p class='text text-justify'>
@@ -173,8 +173,8 @@ function displayDelivery()
                         </select>
                     </label>
 
-                    <button class='btn btn-primary' @click='proceedVac()'
-                        style='color: #f0c7c2; margin-left: 10px; background-color: #393F82'>
+                    <button class='btn btn-primary ml-0'   style='background-color: #fa899c; border: none;
+                    color: white;' type='submit'>
                         Calculer
                     </button>
                 </p>
@@ -207,17 +207,20 @@ function displayDelivery()
             <hr>
 
             <div class='links mx-auto text-center'>
-                <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
+                <a class='btn btn-primary' style='background-color: #fa899c;
+                border: none; color: white;'
                     href='https://www.calendriers-grossesse.com/'>
                     Calendrier grossesse
                 </a>
 
-                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+                <a class='btn btn-primary' style='background-color: #fa899c;
+                border: none; color: white;'
                     href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
                     Calcul semaine grossesse
                 </a>
 
-                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+                <a class='btn btn-primary' style='background-color: #fa899c;
+                border: none; color: white;'
                     href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
                     Calcul mois grossesse
                 </a>

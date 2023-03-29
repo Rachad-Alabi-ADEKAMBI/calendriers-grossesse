@@ -21,6 +21,4 @@ if (!empty($_POST)) {
     $_SESSION['preg'] = [
         'conceptionDate' => $conceptionDate,
     ];
-
-    header('index.php');
 }

@@ -50,10 +50,6 @@ html, body{
         h1{
             margin: 15px auto;
             color: $pink;
-            span{
-                display: none;
-            }
-
         }
 
         p{
@@ -117,10 +113,10 @@ html, body{
 
         .results{
             min-height: 190px;
-            height: 250px;
-            width: 65%;
+            height: 270px;
+            width: 75%;
             flex: 1;
-            margin: auto 50px;
+            margin: auto 30px;
             background-color: $bisque;
             border-radius: 5px;
             padding-left: 10px;
@@ -139,6 +135,28 @@ html, body{
                     font-weight: bold;
                 }
             }
+
+            #results{
+                display: block;
+            }
+
+            #echo, #appointments, #more {
+                display: none;
+            }
+
+
+
+            form{
+                .ovulation{
+                    width: 210px;
+                    @include flex();
+
+                    .btn{
+                      //  margin-top: 0px;
+                    }
+                }
+            }
+
             .buttons{
                 position: absolute;
                 bottom: 5px;
@@ -147,6 +165,8 @@ html, body{
                 }
             }
         }
+
+
     }
 }
 
@@ -163,6 +183,7 @@ html, body{
     .text{
         span{
             color: $pink;
+            font-weight: bold;
         }
     }
 
@@ -197,8 +218,7 @@ table {
     background-color: #fce4d6;
     width: 80%;
     margin: auto;
-    padding-top: 10px;
-    border-radius: 5px;
+    padding: 10px;
 }
 
 .month {
@@ -267,21 +287,73 @@ table {
 
 @media(min-width: 350px) and(max-width: 767px){
     h1{
-        font-size: 1.8em;
+        font-size: 2em;
     }
     .main{
-        width: 90%;
+        width: 100%;
         flex-direction: column;
         background-position: center;
-        height: auto;
         padding-bottom: 10px;
+        margin: auto;
 
         &__text{
             width: 100%;
             padding: 5px;
             h1{
                 margin: 15px auto;
+                font-size: 1.6em;
             }
+        }
+
+        .items{
+            .proceed{
+                width: 340px;
+                margin: auto auto 5px auto;
+
+                .form{
+                    width: 65%;
+
+                    label{
+                        width: 190px;
+                        height: 100px;
+                    }
+
+                    .or{
+                        padding-left: 45%;
+                    }
+                }
+            }
+
+
+            .btn{
+                margin: 5px auto;
+            }
+
+            .results{
+                width: 90%;
+                margin: 10px auto;
+                height: auto;
+                min-height: 200px;
+
+                h2{
+                    font-size: 1.4em;
+                }
+
+                .buttons{
+                    position: relative;
+                }
+            }
+        }
+    }
+
+    .item{
+        width: 90%;
+        h2{
+            font-size: 1.4em;
+        }
+
+        .weeks, .months{
+            width: 95%;
         }
     }
 

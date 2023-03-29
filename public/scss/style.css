@@ -37,9 +37,6 @@ html, body {
   margin: 15px auto;
   color: #fa899c;
 }
-.main__text h1 span {
-  display: none;
-}
 .main__text p {
   color: #fa899c;
   margin-top: -15px;
@@ -99,10 +96,10 @@ html, body {
 }
 .main .items .results {
   min-height: 190px;
-  height: 250px;
-  width: 65%;
+  height: 270px;
+  width: 75%;
   flex: 1;
-  margin: auto 50px;
+  margin: auto 30px;
   background-color: #eedecb;
   border-radius: 5px;
   padding-left: 10px;
@@ -119,6 +116,19 @@ html, body {
 .main .items .results__top span {
   color: #fa899c;
   font-weight: bold;
+}
+.main .items .results #results {
+  display: block;
+}
+.main .items .results #echo, .main .items .results #appointments, .main .items .results #more {
+  display: none;
+}
+.main .items .results form .ovulation {
+  width: 210px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 .main .items .results .buttons {
   position: absolute;
@@ -139,6 +149,7 @@ html, body {
 }
 .item .text span {
   color: #fa899c;
+  font-weight: bold;
 }
 .item table {
   border: 1px solid black;
@@ -165,8 +176,7 @@ html, body {
   background-color: #fce4d6;
   width: 80%;
   margin: auto;
-  padding-top: 10px;
-  border-radius: 5px;
+  padding: 10px;
 }
 .item .month {
   border: 1px solid black;
@@ -217,14 +227,14 @@ html, body {
 }
 @media (min-width: 350px) and (max-width: 767px) {
   h1 {
-    font-size: 1.8em;
+    font-size: 2em;
   }
   .main {
-    width: 90%;
+    width: 100%;
     flex-direction: column;
     background-position: center;
-    height: auto;
     padding-bottom: 10px;
+    margin: auto;
   }
   .main__text {
     width: 100%;
@@ -232,5 +242,44 @@ html, body {
   }
   .main__text h1 {
     margin: 15px auto;
+    font-size: 1.6em;
+  }
+  .main .items .proceed {
+    width: 340px;
+    margin: auto auto 5px auto;
+  }
+  .main .items .proceed .form {
+    width: 65%;
+  }
+  .main .items .proceed .form label {
+    width: 190px;
+    height: 100px;
+  }
+  .main .items .proceed .form .or {
+    padding-left: 45%;
+  }
+  .main .items .btn {
+    margin: 5px auto;
+  }
+  .main .items .results {
+    width: 90%;
+    margin: 10px auto;
+    height: auto;
+    min-height: 200px;
+  }
+  .main .items .results h2 {
+    font-size: 1.4em;
+  }
+  .main .items .results .buttons {
+    position: relative;
+  }
+  .item {
+    width: 90%;
+  }
+  .item h2 {
+    font-size: 1.4em;
+  }
+  .item .weeks, .item .months {
+    width: 95%;
   }
 }/*# sourceMappingURL=style.css.map */

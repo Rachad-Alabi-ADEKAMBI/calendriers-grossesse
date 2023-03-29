@@ -2,36 +2,29 @@
 session_start();
 
 if (!empty($_POST)) {
+    // Initialize $conceptionDate to null
     $conceptionDate = null;
+
+    // Check if 'lastPeriodDate' is set
     if (isset($_POST['lastPeriodDate'])) {
         // Calculate the conception date by adding 14 days to 'lastPeriodDate'
         $conceptionDate = strtotime($_POST['lastPeriodDate'] . ' +14 days');
         $conceptionDate = date('d-m-Y', $conceptionDate);
-    } else {
-        $conceptionDate = $_SESSION['preg']['conceptionDate'];
     }
 
-    if (isset($_POST['kids'])) {
-        $kids = $_POST['kids'];
-    }
-
-    if (isset($_POST['comingKids'])) {
-        $comingKids = $_POST['comingKids'];
+    if (isset($_POST['conceptionDate'])) {
+        // Use the 'conceptionDate' if it is set
+        $conceptionDate = strtotime($_POST['conceptionDate']);
+        $conceptionDate = date('d-m-Y', $conceptionDate);
     }
 
     // Save the $conceptionDate to the $_SESSION superglobal under the 'preg' key
     $_SESSION['preg'] = [
         'conceptionDate' => $conceptionDate,
-        'kids' => $kids,
-        'comingKids' => $comingKids,
     ];
 }
 
-// Check if the $_POST superglobal is not empty
-
 echo $_SESSION['preg']['conceptionDate'];
-echo $_SESSION['preg']['kids'];
-echo $_SESSION['preg']['comingKids'];
 
 function addDaysToDate($date, $daysToAdd)
 {
@@ -83,7 +76,7 @@ function convertInMonths($nb_jours)
     return $resultat;
 }
 
-$conceptionDate = '01/01/2023';
+$conceptionDate = '15-01-2023';
 
 $duration = calculDuration($conceptionDate);
 
@@ -129,6 +122,49 @@ $prematureDate = addDaysToDate($conceptionDate, 253);
 $anesth = addDaysToDate($conceptionDate, 257);
 $vagA = addDaysToDate($conceptionDate, 239);
 $vagB = addDaysToDate($conceptionDate, 266);
+
+$kids = 2;
+$comingKids = 3;
+$cycle = 24;
+
+if ($kids < 2) {
+    $dateVacA = addDaysToDate($conceptionDate, 231);
+    $dateVacB = addDaysToDate($conceptionDate, 230 + 112);
+    $dateCare = addDaysToDate($conceptionDate, 153);
+}
+
+if ($kids >= 2) {
+    $dateVacA = addDaysToDate($conceptionDate, 217);
+    $dateVacB = addDaysToDate($conceptionDate, 398);
+    $dateCare = addDaysToDate($conceptionDate, 153);
+}
+
+if ($comingKids == 'jumeaux') {
+    $dateVacA = addDaysToDate($conceptionDate, 189);
+    $dateVacB = addDaysToDate($conceptionDate, 426);
+    $dateCare = addDaysToDate($conceptionDate, 153);
+}
+
+if ($comingKids == 'triples') {
+    $dateVacA = addDaysToDate($conceptionDate, 105);
+    $dateVacB = addDaysToDate($conceptionDate, 426);
+    $dateCare = addDaysToDate($conceptionDate, 153);
+}
+
+//ovulation
+
+$lastPeriodDate = '01-01-2023';
+
+$fecondDateA = null;
+if ($cycle == 24) {
+    $fecondDateA = addDaysToDate($lastPeriodDate, 12);
+} elseif ($cycle == 28) {
+    $fecondDateA = addDaysToDate($lastPeriodDate, 14);
+} elseif ($cycle == 36) {
+    $fecondDateA = addDaysToDate($lastPeriodDate, 18);
+}
+
+$fecondDateB = addDaysToDate($fecondDateA, 2);
 ?>
 
 
@@ -157,11 +193,16 @@ $vagB = addDaysToDate($conceptionDate, 266);
                     </p>
                 </div>
 
+                result: {{  userId }}
+
+                <input type="" id="user" value="<?php echo $_SESSION['preg'][
+                    'conceptionDate'
+                ]; ?>">
+
+
                 <p class='text text-center' v-if='errorMsg'>
                     {{ errorMsg }}
                 </p>
-
-
 
                 <div class='items'>
                     <form class='proceed' action='#' method='POST'>
@@ -194,7 +235,7 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                 Mon calendrier de grossesse <span><a href='#calendar'><i class='fas fa-question'
                                             style='color: #fa899c'></i></a></span>
                             </h2>
-                            <p class='text text-justify'>
+                            <p class='text'>
                                 Vous êtes enceinte de: <span>$convertedDuration</span> <br>
                                 Durée d'aménorrhées: <span> $convertedAnDuration</span> <br>
                                 Vous êtes dans le : <span> $month </span> <br>
@@ -210,7 +251,7 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                             style='color: #fa899c'></i></a></span>
                             </h2>
 
-                            <p class='text text-justify'>
+                            <p class='text'>
                                 Echographie précoce: entre le <span> $echo0A</span>
                                 et le <span> $echo0B </span>
                                 <br>
@@ -234,7 +275,7 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                             style='color: #fa899c'></i></a></span>
                             </h2>
 
-                            <p class='text text-justify'>
+                            <p class='text'>
                                 4ème mois de grossesse: entre le <span> $app4A</span> et le
                                 <span> $app4B </span> <br>
 
@@ -257,13 +298,14 @@ $vagB = addDaysToDate($conceptionDate, 266);
 
                         <div class='results__top' v-if='showVacancies'>
                             <h2 class='subtitle'>
-                                Congés <span><a href='#vacancies'><i class='fas fa-question'
+                                DATES<span><a href='#vacancies'><i class='fas fa-question'
                                             style='color: #fa899c'></i></a></span>
                             </h2>
                             <form action='#' method='POST'>
-                                <p class='text text-justify'>
+                                <p class='text'>
                                     <label for=''>
-                                        Nombre d'enfant(s) déjà né(s) : <select name='kids' id='' v-model='kids'>
+                                        Nombre d'enfant(s) déjà né(s) : <select name='kids' required id=''
+                                            v-model='kids'>
                                             <option value='0'>0</option>
                                             <option value='1'>1</option>
                                             <option value='2'>2</option>
@@ -271,7 +313,8 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                     </label> <br>
 
                                     <label for=''>
-                                        Vous êtes enceinte de <select name='comingKids' v-model='kidsComing'>
+                                        Vous êtes enceinte de <select name='comingKids' required>
+                                            <option value='Un enfant'>Un enfant</option>
                                             <option value='jumeaux'>Jumeaux</option>
                                             <option value='triples'>Triplés ou plus</option>
                                         </select>
@@ -284,11 +327,11 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                 </p>
                             </form>
 
-                            <p class='text text-justify' v-if='resultsVac != null'>
-                                Début de votre congé maternité : <span>{{ dateVacA}}</span> <br>
-                                Fin de votre congé maternité : <span>{{ dateVacB}}</span> <br>
+                            <p class='text'>
+                                Début de votre congé maternité : <span> <?= $dateVacA ?></span> <br>
+                                Fin de votre congé maternité : <span><?= $dateVacB ?></span> <br>
                                 Date de pris en charge l'assurance maladie:
-                                <span>{{ dateCare }}</span> <br>
+                                <span><?= $dateCare ?></span> <br>
                             </p>
 
 
@@ -302,7 +345,7 @@ $vagB = addDaysToDate($conceptionDate, 266);
                                 Plus <span><a href='#more'><i class='fas fa-question'
                                             style='color: #fa899c'></i></a></span>
                             </h2>
-                            <p class='text text-justify'>
+                            <p class='text'>
                                 A partir du <span>$prematureDate </span> votre bébé n'est plus prématuré. <br>
                                 La consultation avec l'anesthésiste est à effectuer à partir du <span> $anesth </span>
                                 <br>
@@ -311,7 +354,37 @@ $vagB = addDaysToDate($conceptionDate, 266);
                             </p>
                         </div>
 
+                        <div class='results__top' v-if='showOvulation'>
 
+                            <h2 class='subtitle'>
+                                DATES D'OVULATION <span><a href='#ovulation'><i class='fas fa-question'
+                                            style='color: #fa899c'></i></a></span>
+                            </h2>
+
+                            <form action='#' method='POST'>
+                                <div class='ovulation'>
+                                    <label for=''>
+                                        Cycle : <select name='cycle' id='' style='height: 30px'>
+                                            <option value='24'>24</option>
+                                            <option value='28'>28</option>
+                                            <option value='36'>36</option>
+                                        </select>
+                                    </label> <br>
+
+
+                                    <button class='btn btn-primary ' type='submit'
+                                        style='background-color: #fa899c; color: white;'>
+                                        Calculer
+                                    </button>
+                                </div>
+                            </form>
+
+                            <p class='text'>
+                                Période d'ovulation: entre le <span> <?= $fecondDateA ?> </span> et le
+                                <span> <?= $fecondDateB ?>
+                                </span>
+                            </p> <br>
+                        </div>
 
                         <div v-if='showButtons' class='buttons'>
                             <label>
@@ -337,314 +410,295 @@ $vagB = addDaysToDate($conceptionDate, 266);
                             </label>
 
                             <label>
+                                <input type='radio' name='menu-option' value='ovulation' @click='displayOvulation()'>
+                                Ovulation
+                            </label>
+
+                            <label>
                                 <input type='radio' name='menu-option' value='plus' @click='displayMore()'>
                                 Plus
                             </label>
                         </div>
                     </div>
-
-                    <hr>
-                    <div class='item mt-5' id='calendar'>
-                        <h2>
-                            Calendrier semaine par semaine
-                        </h2>
-
-                        <button class='btn btn-primary' @click='proceedCalendar()' v-if='showButton' style='background-color: #393F82;
-                                color: #f0c7c2'>
-                            Afficher le calendrier
-                        </button>
-
-                        <div class='calendar mb-3' v-if='showCalendar'>
-                            <div class='close mr-2 mt-1' @click='closeCalendar()'>
-                                X
-                            </div>
-                            <p class='text text-center mt-2'>
-                                Semaine de grossesse: {{ currentWeek +1}}
-                            </p>
-                            <div class='weeks'>
-                                <div class='container'>
-                                    <div class='row'>
-                                        <div v-for='(week, index) in calendar' :key='index'
-                                            class='week col-sm-12 col-md-2' :class='{ box: index === currentWeek }'>
-                                            <h4>Semaine {{ index + 1 }}</h4>
-                                            <ul>
-                                                <li v-for='(day, dayIndex) in week' :key='dayIndex'>
-                                                    {{ day }}
-                                                </li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <p class='text text-justify'>
-                            Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes
-                            de la
-                            grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence
-                            généralement à la
-                            date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé,
-                            soit
-                            environ 40 semaines plus tard.
-                        </p>
-                    </div>
-                    <hr>
-
-                    <div class='item' id='echography'>
-                        <h2>
-                            Calendrier des echographies
-                        </h2>
-
-                        <p class='text text-justify'>
-                            Echographie précoce: entre le <span> $echo0A</span>
-                            et le <span> $echo0B </span>
-                            <br>
-
-                            1ère échographie recommandée: entre le <span> $echo1A </span> et le
-                            <span> $echo1B </span> <br>
-
-                            2ème échographie recommandée: entre le <span> $echo2A </span>
-                            et le <span> $echo2B </span> <br>
-
-                            3ème échographie recommandée:
-                            entre le <span> $echo3A </span> et le
-                            <span> $echo3B </span>
-                        </p>
-                    </div>
-                    <hr>
-
-                    <div class='item' id='appointments'>
-                        <h2>
-                            Calendrier des consultations prénatales
-                        </h2>
-
-                        <p class='text text-justify'>
-                            4ème mois de grossesse: entre le <span> $app4A</span> et le
-                            <span> $app4B </span> <br>
-
-                            5ème mois de grossesse: entre le <span> $app5A </span> et le
-                            <span>$app5B </span> <br>
-
-                            6ème mois de grossesse: entre le <span> $app6A </span> et le
-                            <span> $app6B </span> <br>
-
-                            7ème mois de grossesse: entre le <span> $app7A </span> et le
-                            <span> $app7B </span> <br>
-
-                            8ème mois de grossesse: entre le <span>$app8A </span> et le
-                            <span> $app8B </span> <br>
-
-                            9ème mois de grossesse: entre le <span> $app9A </span> et le
-                            <span> $app9B </span>
-                        </p>
-
-                        <p class='text text-justify'>
-                            Le calcul des dates pendant la grossesse permet de déterminer la date d'accouchement et de
-                            suivre le
-                            développement du bébé. Les consultations prénatales sont essentielles pour surveiller la
-                            santé de la
-                            mère et du bébé, détecter d'éventuels problèmes et fournir des informations et un soutien
-                            émotionnel
-                            et psychologique.
-                        </p>
-                    </div>
-                    <hr>
-
-                    <div class='item' id='vacancies'>
-                        <h2>
-                            Dates congé maternité
-                        </h2>
-
-                        <p class='text text-justify' v-if='results != null'>
-                            <label for=''>
-                                Nombre d'enfant(s) déjà né(s) : <select name='' id='' v-model='kids'
-                                    style='height: 28px'>
-                                    <option value='0'>0</option>
-                                    <option value='1'>1</option>
-                                    <option value='2'>2</option>
-                                </select>
-                            </label> <br>
-
-                            <label for=''>
-                                Vous êtes enceinte de <select name='' id='' v-model='kidsComing' style='height: 28px'>
-                                    <option value='jumeaux'>Jumeaux</option>
-                                    <option value='triples'>Triplés ou plus</option>
-                                </select>
-                            </label>
-
-                            <button class='btn btn-primary' @click='proceedVac()'
-                                style='color: #f0c7c2; margin-left: 10px; background-color: #393F82'>
-                                Calculer
-                            </button>
-                        </p>
-                        <br>
-
-                        <p class='text text-justify' v-if='resultsVac != null'>
-                            <strong> Date limite pour déclarer votre grossesse:</strong>
-                            <span>{{ dateOfAnnounement}}</span>
-                            <br>
-
-                            <strong>Date de début de votre congé maternité: </strong>
-                            <span>{{ formatDate(dateVacA)}}</span>
-                            <br>
-                            <strong>Date de fin de votre congé maternité:</strong>
-                            <span>{{ formatDate(dateVacB)}}</span> <br>
-                            <strong>Vous serez pris en charge à 100% par l'assurance maladie à partir du:</strong>
-                            <span>{{ formatDate(dateCare) }}</span> <br>
-                        </p>
-
-
-                        <p class='text text-justify'>Pour bénéficier de tous vos droits, vous devez envoyer votre
-                            déclaration de
-                            grossesse
-                            dans les 14 premières semaines ou avant la fin du 3e mois.
-                            Le congé maternité est un temps de repos accordé à la mère après l'accouchement pour
-                            récupérer et
-                            prendre soin de son nouveau-né. Le calcul de la durée du congé maternité dépend en général,
-                            la durée
-                            du
-                            congé maternité est calculée à partir de la date prévue d'accouchement. Il offre également
-                            un temps
-                            précieux pour créer des liens avec le nouveau-né, allaiter et prendre soin de lui. Le congé
-                            maternité peut également aider à réduire le risque de complications de santé et à favoriser
-                            la
-                            récupération et le bien-être de la mère et du bébé.
-                        </p>
-                    </div>
-                    <hr>
-
-                    <div class='item' id='ovulation'>
-                        <h2>
-                            calcul date d'ovulation
-                        </h2>
-
-                        <p class='text text-justify' v-if='results != null'>
-                            <label for=''>
-                                Cycle : <select name='' id='' v-model='cycle' style='height: 28px'>
-                                    <option value='24'>24</option>
-                                    <option value='28'>28</option>
-                                    <option value='36'>36</option>
-                                </select>
-                            </label> <br>
-
-
-                            <button class='btn btn-primary ml-5' @click='proceedFert()' style='color: #f0c7c2; margin-left: 10px;
-                        background-color: #393F82'>
-                                Calculer
-                            </button>
-                        </p>
-
-
-                        <p class='text text-justify' v-if='resultsFert != null'>
-                            <strong>Période d'ovulation:</strong> entre le <span> {{  formatDate(fecondDateA)  }}
-                            </span>
-                            et le
-                            <span>{{  formatDate(fecondDateB) }}</span> <br>
-                        </p>
-
-
-                        <p class='text text-justify'>
-                            Pour déterminer votre cycle d’ovulation, il suffit en définitive de connaître votre cycle
-                            menstruel.
-                            Celui-ci commence le premier jour de vos règles et s’achève le premier jour des règles
-                            suivantes. En
-                            moyenne, le cycle menstruel est de 28 jours, mais certaines femmes ont des cycles plus
-                            courts,
-                            jusqu’à 22 jours, tandis que d’autres ont des cycles beaucoup plus longs, pouvant durer
-                            jusqu’à 35,
-                            voire 40 jours. <br>
-
-                            Il existe plusieurs méthodes pour déterminer la date d'ovulation, notamment en surveillant
-                            la
-                            température corporelle basale, en utilisant des tests d'ovulation ou en surveillant les
-                            changements
-                            dans la glaire cervicale. Il est important de comprendre les signes de l'ovulation pour
-                            planifier
-                            une grossesse ou pour éviter une grossesse non désirée. Cependant, il est important de noter
-                            que ces
-                            méthodes ne sont pas toujours précises et ne garantissent pas une conception réussie.
-                        </p>
-                    </div>
-                    <hr>
-
-                    <div class='item' id='more'>
-                        <h2>
-                            Autres informations importantes
-                        </h2>
-
-
-                        <p class='text text-justify' v-if='results != null'>
-                            <strong>Votre bébé n'est plus prématuré à partir du:</strong>
-                            <span>{{ formatDate(prematureDate) }}</span>
-                            <br>
-                            <strong> Date limite pour effectuer le test de trisomie 21:</strong> entre le
-                            <span>{{ formatDate(dateTriso1) }}
-                            </span>
-                            et le
-                            <span>{{ formatDate(dateTriso2) }}</span> <br>
-                            <strong>Consultation avec l'anesthésiste:</strong>
-                            à partir du
-                            <span>{{ formatDate(anesthDate) }}</span> <br>
-                            <strong>Prélèvement vaginal</strong>: à éffectuer entre le
-                            <span>{{ formatDate(dateVagA) }}</span> et
-                            le
-                            <span>{{ formatDate(dateVagB) }}</span> <br>
-                        </p>
-
-                        <p class='text text-justify'>
-                        <ul>
-                            <li>
-                                <strong>Le test de trisomie21</strong> est réalisé en début de grossesse entre la 11ème
-                                et la
-                                14ème semaine
-                                d'aménorrhée Il
-                                comprend une prise de sang et une échographie afin d'évaluer le risque de trisomie 21
-                                mais aussi
-                                de
-                                trisomie 18 et un éventuel défaut de fermeture du tube neural.
-                            </li>
-
-                            <li>
-                                C'est au cours du 8e mois que votre <strong>rendez-vous avec l'anesthésiste</strong> est
-                                préconisé. En cas de
-                                grossesse difficile ou de naissance multiple, le rendez-vous est avancé au 6e ou 7e
-                                mois.
-                                Parfois, vous pouvez y aller au tout début du 9e mois.
-                            </li>
-
-                            <li>
-                                En général, votre professionnel de la santé procédera à un <strong>examen
-                                    vaginal</strong>
-                                seulement au cours des visites près de votre date prévue d'accouchement.
-                            </li>
-                        </ul>
-
-                        </p>
-                    </div>
-                    <hr>
-
-                    <div class='links mx-auto text-center'>
-                        <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                            href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
-                            Calcul semaine grossesse
-                        </a>
-
-                        <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                            href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
-                            Calcul mois grossesse
-                        </a>
-
-                        <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
-                            href='https://www.calendriers-grossesse.com/calcul-date-daccouchement/'>
-                            Calcul date d'accouchement
-                        </a>
-                    </div>
                 </div>
             </div>
 
-            <?php include 'script.php'; ?>
+            <hr>
+            <div class='item mt-5' id='calendar'>
+                <h2>
+                    Calendrier semaine par semaine
+                </h2>
+
+                <button class='btn btn-primary' @click='proceedCalendar()' v-if='showButton' style='background-color: #393F82;
+                                color: #f0c7c2'>
+                    Afficher le calendrier
+                </button>
+
+                <div class='calendar mb-3' v-if='showCalendar'>
+                    <div class='close mr-2 mt-1' @click='closeCalendar()'>
+                        X
+                    </div>
+                    <p class='text text-center mt-2'>
+                        Semaine de grossesse: {{ currentWeek +1}}
+                    </p>
+
+
+                </div>
+                <p class='text'>
+                    Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes
+                    de la
+                    grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence
+                    généralement à la
+                    date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé,
+                    soit
+                    environ 40 semaines plus tard.
+                </p>
+            </div>
+            <hr>
+
+            <div class='item' id='echography'>
+                <h2>
+                    Calendrier des echographies
+                </h2>
+
+                <p class='text'>
+                    Echographie précoce: entre le <span> $echo0A</span>
+                    et le <span> $echo0B </span>
+                    <br>
+
+                    1ère échographie recommandée: entre le <span> $echo1A </span> et le
+                    <span> $echo1B </span> <br>
+
+                    2ème échographie recommandée: entre le <span> $echo2A </span>
+                    et le <span> $echo2B </span> <br>
+
+                    3ème échographie recommandée:
+                    entre le <span> $echo3A </span> et le
+                    <span> $echo3B </span>
+                </p>
+            </div>
+            <hr>
+
+            <div class='item' id='appointments'>
+                <h2>
+                    Calendrier des consultations prénatales
+                </h2>
+
+                <p class='text'>
+                    4ème mois de grossesse: entre le <span> $app4A</span> et le
+                    <span> $app4B </span> <br>
+
+                    5ème mois de grossesse: entre le <span> $app5A </span> et le
+                    <span>$app5B </span> <br>
+
+                    6ème mois de grossesse: entre le <span> $app6A </span> et le
+                    <span> $app6B </span> <br>
+
+                    7ème mois de grossesse: entre le <span> $app7A </span> et le
+                    <span> $app7B </span> <br>
+
+                    8ème mois de grossesse: entre le <span>$app8A </span> et le
+                    <span> $app8B </span> <br>
+
+                    9ème mois de grossesse: entre le <span> $app9A </span> et le
+                    <span> $app9B </span>
+                </p>
+
+                <p class='text'>
+                    Le calcul des dates pendant la grossesse permet de déterminer la date d'accouchement et de
+                    suivre le
+                    développement du bébé. Les consultations prénatales sont essentielles pour surveiller la
+                    santé de la
+                    mère et du bébé, détecter d'éventuels problèmes et fournir des informations et un soutien
+                    émotionnel
+                    et psychologique.
+                </p>
+            </div>
+            <hr>
+
+            <div class='item' id='vacancies'>
+                <h2>
+                    Dates congé maternité
+                </h2>
+
+                <p class='text' v-if='results != null'>
+                    <label for=''>
+                        Nombre d'enfant(s) déjà né(s) : <select name='' id='' v-model='kids' style='height: 28px'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                        </select>
+                    </label> <br>
+
+                    <label for=''>
+                        Vous êtes enceinte de <select name='' id='' v-model='kidsComing' style='height: 28px'>
+                            <option value='jumeaux'>Jumeaux</option>
+                            <option value='triples'>Triplés ou plus</option>
+                        </select>
+                    </label>
+
+                    <button class='btn btn-primary' @click='proceedVac()'
+                        style='color: #f0c7c2; margin-left: 10px; background-color: #393F82'>
+                        Calculer
+                    </button>
+                </p>
+                <br>
+                <p class='text'>
+                    Début de votre congé maternité : <span> <?= $dateVacA ?></span> <br>
+                    Fin de votre congé maternité : <span><?= $dateVacB ?></span> <br>
+                    Date de pris en charge l'assurance maladie:
+                    <span><?= $dateCare ?></span> <br>
+                </p>
+
+                <p class='text'>Pour bénéficier de tous vos droits, vous devez envoyer votre
+                    déclaration de
+                    grossesse
+                    dans les 14 premières semaines ou avant la fin du 3e mois.
+                    Le congé maternité est un temps de repos accordé à la mère après l'accouchement pour
+                    récupérer et
+                    prendre soin de son nouveau-né. Le calcul de la durée du congé maternité dépend en général,
+                    la durée
+                    du
+                    congé maternité est calculée à partir de la date prévue d'accouchement. Il offre également
+                    un temps
+                    précieux pour créer des liens avec le nouveau-né, allaiter et prendre soin de lui. Le congé
+                    maternité peut également aider à réduire le risque de complications de santé et à favoriser
+                    la
+                    récupération et le bien-être de la mère et du bébé.
+                </p>
+            </div>
+            <hr>
+
+            <div class='item' id='ovulation'>
+                <h2>
+                    calcul date d'ovulation
+                </h2>
+
+                <p class='text' v-if='results != null'>
+                    <label for=''>
+                        Cycle : <select name='' id='' v-model='cycle' style='height: 28px'>
+                            <option value='24'>24</option>
+                            <option value='28'>28</option>
+                            <option value='36'>36</option>
+                        </select>
+                    </label> <br>
+
+
+                    <button class='btn btn-primary ml-5' @click='proceedFert()' style='color: #f0c7c2; margin-left: 10px;
+                        background-color: #393F82'>
+                        Calculer
+                    </button>
+                </p>
+
+
+                <p class='text' v-if='resultsFert != null'>
+                    <strong>Période d'ovulation:</strong> entre le <span> {{  formatDate(fecondDateA)  }}
+                    </span>
+                    et le
+                    <span>{{  formatDate(fecondDateB) }}</span> <br>
+                </p>
+
+
+                <p class='text'>
+                    Pour déterminer votre cycle d’ovulation, il suffit en définitive de connaître votre cycle
+                    menstruel.
+                    Celui-ci commence le premier jour de vos règles et s’achève le premier jour des règles
+                    suivantes. En
+                    moyenne, le cycle menstruel est de 28 jours, mais certaines femmes ont des cycles plus
+                    courts,
+                    jusqu’à 22 jours, tandis que d’autres ont des cycles beaucoup plus longs, pouvant durer
+                    jusqu’à 35,
+                    voire 40 jours. <br>
+
+                    Il existe plusieurs méthodes pour déterminer la date d'ovulation, notamment en surveillant
+                    la
+                    température corporelle basale, en utilisant des tests d'ovulation ou en surveillant les
+                    changements
+                    dans la glaire cervicale. Il est important de comprendre les signes de l'ovulation pour
+                    planifier
+                    une grossesse ou pour éviter une grossesse non désirée. Cependant, il est important de noter
+                    que ces
+                    méthodes ne sont pas toujours précises et ne garantissent pas une conception réussie.
+                </p>
+            </div>
+            <hr>
+
+            <div class='item' id='more'>
+                <h2>
+                    Autres informations importantes
+                </h2>
+
+
+                <p class='text' v-if='results != null'>
+                    <strong>Votre bébé n'est plus prématuré à partir du:</strong>
+                    <span>{{ formatDate(prematureDate) }}</span>
+                    <br>
+                    <strong> Date limite pour effectuer le test de trisomie 21:</strong> entre le
+                    <span>{{ formatDate(dateTriso1) }}
+                    </span>
+                    et le
+                    <span>{{ formatDate(dateTriso2) }}</span> <br>
+                    <strong>Consultation avec l'anesthésiste:</strong>
+                    à partir du
+                    <span>{{ formatDate(anesthDate) }}</span> <br>
+                    <strong>Prélèvement vaginal</strong>: à éffectuer entre le
+                    <span>{{ formatDate(dateVagA) }}</span> et
+                    le
+                    <span>{{ formatDate(dateVagB) }}</span> <br>
+                </p>
+
+                <p class='text'>
+                <ul>
+                    <li>
+                        <strong>Le test de trisomie21</strong> est réalisé en début de grossesse entre la 11ème
+                        et la
+                        14ème semaine
+                        d'aménorrhée Il
+                        comprend une prise de sang et une échographie afin d'évaluer le risque de trisomie 21
+                        mais aussi
+                        de
+                        trisomie 18 et un éventuel défaut de fermeture du tube neural.
+                    </li>
+
+                    <li>
+                        C'est au cours du 8e mois que votre <strong>rendez-vous avec l'anesthésiste</strong> est
+                        préconisé. En cas de
+                        grossesse difficile ou de naissance multiple, le rendez-vous est avancé au 6e ou 7e
+                        mois.
+                        Parfois, vous pouvez y aller au tout début du 9e mois.
+                    </li>
+
+                    <li>
+                        En général, votre professionnel de la santé procédera à un <strong>examen
+                            vaginal</strong>
+                        seulement au cours des visites près de votre date prévue d'accouchement.
+                    </li>
+                </ul>
+
+                </p>
+            </div>
+            <hr>
+
+            <div class='links mx-auto text-center'>
+                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+                    href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
+                    Calcul semaine grossesse
+                </a>
+
+                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+                    href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
+                    Calcul mois grossesse
+                </a>
+
+                <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
+                    href='https://www.calendriers-grossesse.com/calcul-date-daccouchement/'>
+                    Calcul date d'accouchement
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <?php include 'script.php'; ?>
 
 </body>
 
