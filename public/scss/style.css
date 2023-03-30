@@ -22,7 +22,7 @@ html, body {
 }
 
 .main {
-  width: 90%;
+  width: 70%;
   height: auto;
   border-radius: 5px;
   margin: auto auto 40px auto;
@@ -47,6 +47,7 @@ html, body {
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: baseline;
   margin-top: 40px;
 }
 .main .items .proceed {
@@ -74,11 +75,15 @@ html, body {
   border-radius: 5px;
   background-color: #eedecb;
   margin: 5px auto;
+  text-align: center;
 }
 .main .items .proceed .form label p {
   width: 100%;
   color: #fa899c;
   font-weight: bold;
+}
+.main .items .proceed .form label input {
+  margin: auto;
 }
 .main .items .proceed .form .or {
   margin: auto;
@@ -95,14 +100,15 @@ html, body {
   color: white;
 }
 .main .items .results {
-  min-height: 190px;
-  height: 270px;
-  width: 75%;
-  flex: 1;
-  margin: auto 30px;
+  height: auto;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin: auto 0;
+  float: left;
   background-color: #eedecb;
   border-radius: 5px;
-  padding-left: 10px;
+  padding: 10px;
   position: relative;
 }
 .main .items .results h2 {
@@ -122,13 +128,6 @@ html, body {
 }
 .main .items .results #echo, .main .items .results #appointments, .main .items .results #more {
   display: none;
-}
-.main .items .results form .ovulation {
-  width: 210px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
 .main .items .results .buttons {
   position: absolute;

@@ -24,8 +24,6 @@ if (!empty($_POST)) {
     ];
 }
 
-echo $_SESSION['preg']['conceptionDate'];
-
 function addDaysToDate($date, $daysToAdd)
 {
     $date = strtotime($date);
@@ -165,6 +163,8 @@ if ($cycle == 24) {
 }
 
 $fecondDateB = addDaysToDate($fecondDateA, 2);
+
+$value = '15/01/2023';
 ?>
 
 
@@ -193,23 +193,14 @@ $fecondDateB = addDaysToDate($fecondDateA, 2);
                     </p>
                 </div>
 
-                result: {{  userId }}
-
-                <input type="" id="user" value="<?php echo $_SESSION['preg'][
-                    'conceptionDate'
-                ]; ?>">
-
-
-                <p class='text text-center' v-if='errorMsg'>
-                    {{ errorMsg }}
-                </p>
 
                 <div class='items'>
                     <form class='proceed' action='#' method='POST'>
                         <div class='form'>
                             <label for=''>
                                 <p>Date des dernières règles: </p>
-                                <input type='date' class='date' name='lastPeriodDate'>
+                                <input class='date' name='lastPeriodDate' type="text" placeholder=<?= $lastPeriodDate ?>
+                                    onfocus='(this.type=`date`)' onblur='(this.type=`text`)'>
                             </label>
 
                             <div class='or'>
@@ -218,7 +209,8 @@ $fecondDateB = addDaysToDate($fecondDateA, 2);
 
                             <label for=''>
                                 <p>Date de conception: </p>
-                                <input type='date' class='date' name='conceptionDate'>
+                                <input class='date' name='conceptionDate' type='text' placeholder=<?= $conceptionDate ?>
+                                    onfocus='(this.type=`date`)' onblur=`(this.type='text' )`>
                             </label>
 
                         </div>
@@ -230,7 +222,7 @@ $fecondDateB = addDaysToDate($fecondDateA, 2);
                     </form>
 
                     <div class='results'>
-                        <div class='results__top' v-if='showResults'>
+                        <div class='results__top'>
                             <h2 class='subtitle'>
                                 Mon calendrier de grossesse <span><a href='#calendar'><i class='fas fa-question'
                                             style='color: #fa899c'></i></a></span>
