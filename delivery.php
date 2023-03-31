@@ -70,136 +70,98 @@ function convertInMonths($nb_jours)
             <div class='main'>
                 <div class='main__text'>
                     <h1 class='title'>
-                        Calendrier de grossesse
+                        CALCUL DE LA DATE D'ACCOUCHEMENT
                     </h1>
-                    <p class='text text-center'>
-                        Toutes les dates importantes de votre grossesse
-                    </p>
                 </div>
 
-                <div class='items'>
-                    <form class='proceed' action='#' method='POST'>
+                <div class='items text-center'>
+                    <form class='proceed mx-auto' action='#' method='POST'>
                         <div class='form'>
                             <label for=''>
-                                <p>Date des dernières règles:</p>
-                                <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
+                                <p>Date des dernières règles: </p>
+                                <input class='date mx-auto text-center' name='lastPeriodDate' type=`text`
+                                    placeholder=$lastPeriodDate onfocus='(this.type=`date`)' onblur=`(this.type='text'
+                                    )` style='width:150px;'>
                             </label>
 
                             <div class='or'>
                                 Ou
                             </div>
 
+
                             <label for=''>
-                                <p>Date de conception</p>
-                                <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
+                                <p>Date des dernières règles: </p>
+                                <input class='date mx-auto text-center' name='conceptionDate' type=`text`
+                                    placeholder=$conceptionDate onfocus='(this.type=`date`)' onblur=`(this.type='text'
+                                    )` style='width:150px; '>
                             </label>
 
                         </div>
 
-                        <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                                    border: none; color: #393F82;'>
+                        <button type='submit' class='btn btn-primary' style='background-color: #fa899c;
+                        border: none; color: white;'>
                             Calculer
                         </button>
                     </form>
-
-                    <div class='results'>
-                        <h2 class='subtitle'>
-                            Date d'accouchement: <span><a href='#calendar'><i class='fas fa-question'></i></a></span>
-                        </h2>
-                        <p class='text text-justify'>
-                            Date d'accouchement prévue: <span> <?= addDaysToDate(
-                                $conceptionDate,
-                                285
-                            ) ?></span> <br>
-
-                        </p>
-                    </div>
                 </div>
             </div>
 
             <div class='item' id='calendar'>
                 <h2>
-                    CALCUL DATE ACCOUCHEMENT
+                    DATE D'ACCOUCHEMENT
                 </h2>
 
 
                 <p class='text text-justify'>
-                    Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes de la
-                    grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence généralement à la
-                    date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé, soit
-                    environ 40 semaines plus tard.
+                    La date d'accouchement prévue ou présumée (DPA) est une étape importante pour les femmes enceintes
+                    et leurs médecins. Cette date est calculée à partir de la date de conception. En théorie, il suffit
+                    d'ajouter neuf mois à la date de début de grossesse pour déterminer la DPA.
+                    <br><br>
+                    Cependant, il est important de noter que chaque femme est différente et que la durée de la grossesse
+                    peut varier d'une personne à l'autre. De plus, la date de conception peut être difficile à
+                    déterminer avec précision, surtout si une femme a des cycles menstruels irréguliers. C'est pourquoi
+                    les médecins utilisent souvent des méthodes plus précises pour estimer la date d'accouchement,
+                    telles que l'échographie.
+                    <br><br>
+                    La date d'accouchement prévue est importante car elle permet aux femmes enceintes de se préparer
+                    mentalement et physiquement pour l'arrivée de leur bébé. Cependant, il est important de noter que la
+                    DPA n'est qu'une estimation et que l'accouchement peut se produire à tout moment, que ce soit avant
+                    ou après la date prévue.
+                    <br><br>
+                    En cas de dépassement de la DPA, les médecins peuvent recommander des mesures pour déclencher
+                    l'accouchement, telles que l'administration d'ocytocine ou une césarienne. Cependant, il est
+                    important de noter que chaque grossesse est unique et que les décisions concernant l'accouchement
+                    doivent être prises au cas par cas, en tenant compte de la santé de la mère et du bébé.
                 </p>
             </div>
-            <hr>
+            <hr> <br>
 
-            <div class='item' id='vacancies'>
-                <h2>
-                    Dates congé maternité
+            <div class='bottom'>
+                <h2 class='subtitle'>
+                    Date d'accouchement:
                 </h2>
+                <p class='text text-justify'>
+                    Date d'accouchement prévue: <span> $dueDate</span> <br>
 
-                <p class='text text-justify' v-if='results != null'>
-                    <label for=''>
-                        Nombre d'enfant(s) déjà né(s) : <select name='' id='' v-model='kids' style='height: 28px'>
-                            <option value='0'>0</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                        </select>
-                    </label> <br>
-
-                    <label for=''>
-                        Vous êtes enceinte de <select name='' id='' v-model='kidsComing' style='height: 28px'>
-                            <option value='jumeaux'>Jumeaux</option>
-                            <option value='triples'>Triplés ou plus</option>
-                        </select>
-                    </label>
-
-                    <button class='btn btn-primary' @click='proceedVac()'
-                        style='color: #f0c7c2; margin-left: 10px; background-color: #393F82'>
-                        Calculer
-                    </button>
                 </p>
-                <br>
-
-                <p class='text text-justify' v-if='resultsVac != null'>
-                    <strong> Date limite pour déclarer votre grossesse:</strong> <span>{{ dateOfAnnounement}}</span>
-                    <br>
-
-                    <strong>Date de début de votre congé maternité: </strong> <span>{{ formatDate(dateVacA)}}</span>
-                    <br>
-                    <strong>Date de fin de votre congé maternité:</strong> <span>{{ formatDate(dateVacB)}}</span> <br>
-                    <strong>Vous serez pris en charge à 100% par l'assurance maladie à partir du:</strong>
-                    <span>{{ formatDate(dateCare) }}</span> <br>
-                </p>
-
-
-                <p class='text text-justify'>Pour bénéficier de tous vos droits, vous devez envoyer votre déclaration de
-                    grossesse
-                    dans les 14 premières semaines ou avant la fin du 3e mois.
-                    Le congé maternité est un temps de repos accordé à la mère après l'accouchement pour récupérer et
-                    prendre soin de son nouveau-né. Le calcul de la durée du congé maternité dépend en général, la durée
-                    du
-                    congé maternité est calculée à partir de la date prévue d'accouchement. Il offre également un temps
-                    précieux pour créer des liens avec le nouveau-né, allaiter et prendre soin de lui. Le congé
-                    maternité peut également aider à réduire le risque de complications de santé et à favoriser la
-                    récupération et le bien-être de la mère et du bébé.
-                </p>
-            </div>
+            </div> <br>
             <hr>
+
 
             <div class='links mx-auto text-center'>
-                <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
-                    href='https://www.calendriers-grossesse.com/'>
+                <a class='btn btn-primary' style='background-color: #fa899c;
+                border: none; color: white;' href='https://www.calendriers-grossesse.com/'>
                     Calendrier grossesse
                 </a>
 
-                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                    href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
-                    Calcul semaine grossesse
+                <a class='btn btn-primary' style='background-color: #fa899c;
+                border: none; color: white;' href='https://www.calendriers-grossesse.com/calcul-semaine-de-grossesse/'>
+                    Calcul semaine de grossesse
                 </a>
 
-                <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                    href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
-                    Calcul mois grossesse
+                <a class='btn btn-primary' style='background-color: #fa899c;
+                border: none; color: white;' href='https://www.calendriers-grossesse.com/calcul-mois-de-grossesse/'>
+                    Calcul mois de grossesse
                 </a>
 
             </div>

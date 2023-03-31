@@ -163,8 +163,6 @@ if ($cycle == 24) {
 }
 
 $fecondDateB = addDaysToDate($fecondDateA, 2);
-
-$value = '15/01/2023';
 ?>
 
 
@@ -199,8 +197,7 @@ $value = '15/01/2023';
                         <div class='form'>
                             <label for=''>
                                 <p>Date des dernières règles: </p>
-                                <input class='date' name='lastPeriodDate' type="text" placeholder=<?= $lastPeriodDate ?>
-                                    onfocus='(this.type=`date`)' onblur='(this.type=`text`)'>
+                                <input type='date' class='date' name='lastPeriodDate'>
                             </label>
 
                             <div class='or'>
@@ -209,14 +206,13 @@ $value = '15/01/2023';
 
                             <label for=''>
                                 <p>Date de conception: </p>
-                                <input class='date' name='conceptionDate' type='text' placeholder=<?= $conceptionDate ?>
-                                    onfocus='(this.type=`date`)' onblur=`(this.type='text' )`>
+                                <input type='date' class='date' name='conceptionDate'>
                             </label>
 
                         </div>
 
-                        <button class='btn btn-primary ml-0' style='background: #f0c7c2;
-                                border: none; height: 40px; color: black;' tyoe='submit'>
+                        <button class='btn btn-primary mx-auto' style='background: #f0c7c2;
+                                border: none; height: 40px; color: black;' type='submit'>
                             Calculer
                         </button>
                     </form>

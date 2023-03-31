@@ -14,6 +14,62 @@ html, body {
   border-radius: 5px;
 }
 
+.results {
+  height: auto;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin: auto 0;
+  float: left;
+  background-color: cornsilk;
+  border-radius: 5px;
+  padding: 10px;
+}
+.results h2 {
+  color: #fa899c;
+  font-size: 1.7em;
+  margin: 10px auto;
+}
+.results__top {
+  margin: 10px auto;
+}
+.results__top span {
+  color: #fa899c;
+  font-weight: bold;
+}
+.results #results {
+  display: block;
+}
+.results #echo, .results #appointments, .results #more {
+  display: none;
+}
+.results .buttons {
+  margin: 5px auto;
+}
+.results .buttons label {
+  margin: 8px;
+}
+
+.bottom {
+  height: auto;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin: auto;
+  background-color: cornsilk;
+  border-radius: 5px;
+  padding: 10px;
+}
+.bottom h2 {
+  color: #fa899c;
+  font-size: 1.7em;
+  margin: 10px auto;
+}
+.bottom p span {
+  color: #fa899c;
+  font-weight: bold;
+}
+
 .content {
   width: 100%;
   height: 100%;
@@ -22,7 +78,7 @@ html, body {
 }
 
 .main {
-  width: 70%;
+  width: 90%;
   height: auto;
   border-radius: 5px;
   margin: auto auto 40px auto;
@@ -51,30 +107,33 @@ html, body {
   margin-top: 40px;
 }
 .main .items .proceed {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  display: block;
   justify-content: flex-start;
-  width: 400px;
+  width: auto;
   height: -webkit-max-content;
   height: -moz-max-content;
   height: max-content;
   position: relative;
   padding-top: 5px;
+  text-align: center;
 }
 .main .items .proceed .form {
-  margin-left: 15px;
+  margin: auto;
   display: block;
-  width: 70%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
 }
 .main .items .proceed .form label {
-  height: 100px;
-  width: 220px;
+  height: 90px;
+  width: 215px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #eedecb;
-  margin: 5px auto;
+  background-color: cornsilk;
+  margin: 20px;
   text-align: center;
 }
 .main .items .proceed .form label p {
@@ -86,55 +145,18 @@ html, body {
   margin: auto;
 }
 .main .items .proceed .form .or {
-  margin: auto;
-  padding-left: 30%;
   font-weight: bold;
+  position: absolute;
+  left: 48%;
+  top: 40%;
 }
 .main .items .proceed .btn {
   height: 40px;
-  float: right;
-  margin: 110px auto auto -40px;
+  margin: 15px auto;
 }
 .main .items .proceed .btn:hover {
   background-color: #fa899c;
   color: white;
-}
-.main .items .results {
-  height: auto;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  margin: auto 0;
-  float: left;
-  background-color: #eedecb;
-  border-radius: 5px;
-  padding: 10px;
-  position: relative;
-}
-.main .items .results h2 {
-  color: #fa899c;
-  font-size: 1.7em;
-  margin: 10px auto;
-}
-.main .items .results__top {
-  margin: 10px auto 15px auto;
-}
-.main .items .results__top span {
-  color: #fa899c;
-  font-weight: bold;
-}
-.main .items .results #results {
-  display: block;
-}
-.main .items .results #echo, .main .items .results #appointments, .main .items .results #more {
-  display: none;
-}
-.main .items .results .buttons {
-  position: absolute;
-  bottom: 5px;
-}
-.main .items .results .buttons label {
-  margin: 8px;
 }
 
 .item {
@@ -154,7 +176,7 @@ html, body {
   border: 1px solid black;
 }
 .item .weeks {
-  background-color: #eedecb;
+  background-color: cornsilk;
   width: 80%;
   margin: auto;
   padding-top: 10px;

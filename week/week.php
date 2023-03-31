@@ -12,6 +12,20 @@
  * Text Domain:       week
  * Domain Path:       /week
  */
+/*
+function wpse16119872_init_session()
+{
+    if (!session_id()) {
+        session_start();
+    }
+
+    if (array_key_exists('conceptionDate', $_SESSION)) {
+        $abc = $_SESSION['conceptionDate'];
+    } else {
+        $abc = 'NOT IN SESSION DATA';
+    }
+}
+*/
 
 function addDaysToDate($date, $daysToAdd)
 {
@@ -50,41 +64,51 @@ function convertInWeeks($nb_jours)
     return trim($resultat); // Retourner le résultat en enlevant les espaces en trop
 }
 
-function convertInMonths($nb_jours)
+function convertInMonths($numberOfDays)
 {
-    $nb_mois = floor($nb_jours / 30); // Calculer le nombre de mois entiers
-
-    // Construire la chaîne de caractères résultante
-    $resultat = '';
-    if ($nb_mois > 0) {
-        $resultat .= $nb_mois . ($nb_mois > 1 ? 'ème' : 'er') . ' mois';
-    }
-
-    return $resultat;
-}
-
-function wpse1611987_init_session()
-{
-    if (!session_id()) {
-        session_start();
-    }
-
-    if (isset($_POST['lastPeriodDate'])) {
-        $_SESSION['arrayImg'] = $_POST['lastPeriodDate'];
-    }
-
-    if (array_key_exists('arrayImg', $_SESSION)) {
-        $abc = $_SESSION['arrayImg'];
+    if ($numberOfDays < 30) {
+        return '1er mois';
     } else {
-        $abc = 'NOT IN SESSION DATA';
+        $numberOfMonths = ceil($numberOfDays / 30);
+        return $numberOfMonths . 'ème mois';
     }
 }
 
 function displayWeek()
 {
-    $abc = wpse1611987_init_session();
-    // $conceptionDate = date('d/m/Y', strtotime());
-    $conceptionDate = '01/01/2023';
+    if (!session_id()) {
+        session_start();
+    } else {
+        $lastPeriodDate = $_SESSION['lastPeriodDate'];
+        $conceptionDate = $_SESSION['conceptionDate'];
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_POST['lastPeriodDate'] != '') {
+            $lastPeriodDate = $_POST['lastPeriodDate'];
+            $lastPeriodDate = strtotime($lastPeriodDate);
+            $lastPeriodDate = date('d-m-Y', $lastPeriodDate);
+            $conceptionDate = addDaysToDate($lastPeriodDate, 14);
+            $_SESSION['conceptionDate'] = $conceptionDate;
+            $_SESSION['lastPeriodDate'] = $lastPeriodDate;
+        } else {
+            $lastPeriodDate = $_SESSION['lastPeriodDate'];
+            $conceptionDate = $_SESSION['conceptionDate'];
+        }
+
+        if ($_POST['conceptionDate'] != '') {
+            $conceptionDate = $_POST['conceptionDate'];
+            $conceptionDate = strtotime($conceptionDate);
+            $conceptionDate = date('d-m-Y', $conceptionDate);
+
+            $lastPeriodDate = addDaysToDate($conceptionDate, -14);
+
+            $_SESSION['conceptionDate'] = $conceptionDate;
+        } else {
+            $conceptionDate = $_SESSION['conceptionDate'];
+            $lastPeriodDate = $_SESSION['lastPeriodDate'];
+        }
+    }
 
     $duration = calculDuration($conceptionDate);
 
@@ -94,7 +118,32 @@ function displayWeek()
 
     $month = convertInMonths($duration);
 
-    $percentage = number_format(($duration * 100) / 285, '0', '', ' ');
+    $percentage = number_format(($duration * 100) / 284, '0', '', ' ');
+
+    $endDatee = addDaysToDate($conceptionDate, 280);
+
+    function getWeeksArray($startDate, $endDate)
+    {
+        $weeks = [];
+        $currentWeek = [];
+        $currentDate = new DateTime($startDate);
+        while ($currentDate <= new DateTime($endDate)) {
+            $currentWeek[] = $currentDate->format('Y-m-d');
+            $currentDate->add(new DateInterval('P1D'));
+            if (
+                $currentDate->format('w') === '0' ||
+                $currentDate > new DateTime($endDate)
+            ) {
+                $weeks[] = $currentWeek;
+                $currentWeek = [];
+            }
+        }
+        return $weeks;
+    }
+
+    $today = new DateTime();
+    // $endDate = date('Y-m-d', $endDate);
+    $weeksArray = getWeeksArray($conceptionDate, $endDatee);
 
     echo "
     <div class='app' id='app'>
@@ -104,7 +153,7 @@ function displayWeek()
         <div class='main'>
             <div class='main__text'>
                 <h1 class='title'>
-                    Calendrier de grossesse
+                    CALCUL SEMAINE GROSSESSE
                 </h1>
                 <p class='text text-center'>
                     Toutes les dates importantes de votre grossesse
@@ -112,41 +161,46 @@ function displayWeek()
             </div>
 
             <div class='items'>
-                <form class='proceed' action='#' method='POST'>
-                    <div class='form'>
-                        <label for=''>
-                            <p>Date des dernières règles:</p>
-                            <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
-                        </label>
+            <form class='proceed' action='#' method='POST'>
+            <div class='form'>
 
-                        <div class='or'>
-                            Ou
-                        </div>
+            <input type='hidden' value=$conceptionDate
+            id='conceptionDate' >
 
-                        <label for=''>
-                            <p>Date de conception</p>
-                            <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
-                        </label>
+            <label for=''>
+            <p>Date des dernières règles: </p>
+            <input class='date mx-auto text-center' name='lastPeriodDate' type=`text` placeholder=$lastPeriodDate
+                onfocus='(this.type=`date`)' onblur=`(this.type='text')` style='width:150px;'>
+                </label>
 
-                    </div>
+                <div class='or'>
+                    Ou
+                </div>
 
-                    <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                                border: none; color: #393F82;'>
-                        Calculer
-                    </button>
-                </form>
+
+                <label for=''>
+                <p>Date des dernières règles: </p>
+                <input class='date mx-auto text-center' name='conceptionDate' type=`text` placeholder=$conceptionDate
+                onfocus='(this.type=`date`)' onblur=`(this.type='text')` style='width:150px; '>
+                </label>
+
+
+                </div>
+
+            <button class='btn btn-primary ml-0' style='background-color: #fa899c; border: none;
+                                    color: white;' type='submit'>
+            Calculer
+         </button>
+        </form>
 
                 <div class='results'>
                     <div class='results__top'>
                     <h2 class='subtitle'>
-                    Mon calendrier de grossesse <span><a href='#calendar'><i
-                                class='fas fa-question'></i></a></span>
+                    MON CALENDRIER DE GROSSESSE
                 </h2>
-                <p class='text text-justify'>
-                    Vous êtes enceinte de: <span> $convertedDuration </span> <br>
-                    Durée d'aménorrhées: <span> $convertedAnDuration </span> <br>
-                    bravo, vous avez fait: <span> $percentage % du
-                        chemin</span>
+                <p class='text'>
+                    Vous êtes enceinte de: <span v-if='conceptionDate != ``'> $convertedDuration </span> <br>
+                    Durée d'aménorrhées (absence de règles): <span v-if='conceptionDate != ``'> $convertedAnDuration </span> <br>
                     <br>
 
                 </p>
@@ -158,41 +212,40 @@ function displayWeek()
 
         <div class='item' id='calendar'>
             <h2>
-                Calendrier semaine par semaine
+            CALENDRIER DE VOTRE GROSSESSE SEMAINE PAR SEMAINE
             </h2>
 
-            <button class='btn btn-primary' @click='proceedCalendar()' v-if='showButton' style='background-color: #393F82;
-            color: #f0c7c2'>
-                Afficher le calendrier
-            </button>
 
-            <div class='calendar mb-3' v-if='showCalendar'>
-                <div class='close mr-2 mt-1' @click='closeCalendar()'>
-                    X
-                </div>
-                <p class='text text-center mt-2'>
-                    Semaine de grossesse: {{ currentWeek +1}}
-                </p>
-                <div class='weeks'>
-                    <div class='container'>
-                        <div class='row'>
-                            <div v-for='(week, index) in calendar' :key='index' class='week col-sm-12 col-md-2'
-                                :class='{ box: index === currentWeek }'>
-                                <h4>Semaine {{ index + 1 }}</h4>
-                                <ul>
-                                    <li v-for='(day, dayIndex) in week' :key='dayIndex'>
-                                        {{ day }}
-                                    </li>
-                                </ul>
-                            </div>
+            <div class='weeks'>
+            <div class='container table'>
+                <div class='tr row'>";
+    foreach ($weeksArray as $index => $week):
 
-                        </div>
-                    </div>
-                </div>
-
-
+        $currentWeekClass = '';
+        $firstDayOfCurrentWeek = new DateTime($week[0]);
+        $lastDayOfCurrentWeek = new DateTime(end($week));
+        if (
+            $today >= $firstDayOfCurrentWeek &&
+            $today <= $lastDayOfCurrentWeek
+        ) {
+            $currentWeekClass = ' current-week';
+        }
+        ?>
+<div class='td week col-9 mx-auto <?= $currentWeekClass ?>'>
+    <p class='text text-center'>Semaine <?= $index +
+        1 ?> Du <?= $firstDayOfCurrentWeek->format(
+     'd/m/Y'
+ ) ?> au <?= $lastDayOfCurrentWeek->format('d/m/Y') ?></p>
+</div>
+<?php
+    endforeach;
+    echo "</div>
             </div>
-            <p class='text text-justify'>
+        </div>
+
+
+
+            <p class='text mt-4'>
             La durée de la grossesse est un sujet important pour les femmes enceintes et leurs médecins. Il est important de comprendre les différentes méthodes de calcul pour déterminer le nombre de semaines de grossesse et d'aménorrhée.
             <br><br>
             La grossesse dure en moyenne 39 semaines de grossesse et 41 semaines d'aménorrhées. Pour calculer le nombre de semaines de grossesse, il faut prendre la date de conception comme point de départ. En revanche, pour calculer le nombre de semaines d'aménorrhée, il faut prendre le premier jour des dernières règles.
@@ -205,17 +258,20 @@ function displayWeek()
         <hr>
 
         <div class='links mx-auto text-center'>
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+            <a class='btn btn-primary'   style='background-color: #fa899c;
+            border: none; color: white;'
                 href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
                 Calcul semaine grossesse
             </a>
 
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+            <a class='btn btn-primary'  style='background-color: #fa899c;
+            border: none; color: white;'
                 href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
                 Calcul mois grossesse
             </a>
 
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
+            <a class='btn btn-primary'   style='background-color: #fa899c;
+            border: none; color: white;'
                 href='https://www.calendriers-grossesse.com/calcul-date-daccouchement/'>
                 Calcul date d'accouchement
             </a>
@@ -275,6 +331,5 @@ function displayWeek()
 }
 
 add_shortcode('week', 'displayWeek');
-// Start session on init hook.
-add_action('init', 'wpse1611987_init_session');
+//add_action('init', 'wpse16119872_init_session');
 //add_action('wp_enqueue_scripts', 'displaySolidaire');
