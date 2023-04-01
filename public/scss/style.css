@@ -247,60 +247,57 @@ html, body {
   }
 }
 @media (min-width: 350px) and (max-width: 767px) {
-  h1 {
-    font-size: 2em;
+  .content {
+    padding-top: 5px;
   }
-  .main {
+  .content .main {
     width: 100%;
     flex-direction: column;
     background-position: center;
     padding-bottom: 10px;
     margin: auto;
   }
-  .main__text {
+  .content .main__text {
     width: 100%;
     padding: 5px;
   }
-  .main__text h1 {
+  .content .main__text h1 {
     margin: 15px auto;
     font-size: 1.6em;
   }
-  .main .items .proceed {
+  .content .main .items .proceed {
     width: 340px;
     margin: auto auto 5px auto;
   }
-  .main .items .proceed .form {
-    width: 65%;
-  }
-  .main .items .proceed .form label {
+  .content .main .items .proceed .form label {
     width: 190px;
     height: 100px;
   }
-  .main .items .proceed .form .or {
-    padding-left: 45%;
+  .content .main .items .proceed .form .or {
+    left: 45%;
   }
-  .main .items .btn {
+  .content .main .items .btn {
     margin: 5px auto;
   }
-  .main .items .results {
+  .content .main .items .results {
     width: 90%;
     margin: 10px auto;
     height: auto;
     min-height: 200px;
   }
-  .main .items .results h2 {
+  .content .main .items .results h2 {
     font-size: 1.4em;
   }
-  .main .items .results .buttons {
+  .content .main .items .results .buttons {
     position: relative;
   }
-  .item {
+  .content .item {
     width: 90%;
   }
-  .item h2 {
+  .content .item h2 {
     font-size: 1.4em;
   }
-  .item .weeks, .item .months {
-    width: 95%;
+  .content .item .weeks, .content .item .months {
+    width: 98%;
   }
 }/*# sourceMappingURL=style.css.map */

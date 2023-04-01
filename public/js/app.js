@@ -47,6 +47,36 @@ createApp({
 
   },
   methods: {
+    proceed(){
+      if (this.lastPeriodDate === '' && this.conceptionDate === '') {
+        alert('Veuillez renseigner soit la date des dernières règles soit celle de la conception');
+      } else {
+
+        if (this.conceptionDate === '') {
+          const startDate = new Date(this.lastPeriodDate);
+          startDate.setDate(startDate.getDate() + 14);
+        this.conceptionDate = startDate;
+        } else{
+          const startDate = new Date(this.conceptionDate);
+          startDate.setDate(startDate.getDate());
+        this.conceptionDate = startDate;
+        }
+
+        const today = new Date();
+
+        this.durationInMs = today - this.conceptionDate;
+        this.durationInDays = Math.floor((this.durationInMs / 1000 / 60 / 60 / 24));
+
+        if(this.durationInMs < 0){
+         alert("Merci de vérifier la date insérée");
+         exit();
+        }
+
+        if(this.durationInDays > 300){
+          alert("Merci de vérifier la date insérée")
+        }
+      }
+      },
     proceedVac(){
         //vacancies
         if (this.kids === '' && this.kidsComing === '') {

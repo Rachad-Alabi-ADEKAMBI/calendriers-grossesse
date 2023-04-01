@@ -13,73 +13,35 @@
  * Domain Path:       /delivery
  */
 
-function wpse16119871_init_session()
-{
-    if (!session_id()) {
-        session_start();
-    }
-
-    if (isset($_POST['lastPeriodDate'])) {
-        $_SESSION['arrayImg'] = $_POST['lastPeriodDate'];
-    }
-
-    if (array_key_exists('arrayImg', $_SESSION)) {
-        $abc = $_SESSION['arrayImg'];
-    } else {
-        $abc = 'NOT IN SESSION DATA';
-    }
-}
-
 function displayDelivery()
 {
-    $conceptionDate = '01/01/2023';
+    $lastPeriodDate = $_SESSION['lastPeriodDate'];
+    $conceptionDate = $_SESSION['conceptionDate'];
 
-    $duration = calculDuration($conceptionDate);
+    $cycle = null;
 
-    $convertedDuration = convertInWeeks($duration);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_POST['lastPeriodDate'] != '') {
+            $lastPeriodDate = $_POST['lastPeriodDate'];
+            $lastPeriodDate = strtotime($lastPeriodDate);
+            $lastPeriodDate = date('d-m-Y', $lastPeriodDate);
+            $conceptionDate = addDaysToDate($lastPeriodDate, 14);
+            $_SESSION['conceptionDate'] = $conceptionDate;
+            $_SESSION['lastPeriodDate'] = $lastPeriodDate;
+        }
 
-    $convertedAnDuration = convertInWeeks(calculDuration($conceptionDate) + 14);
+        if ($_POST['conceptionDate'] != '') {
+            $conceptionDate = $_POST['conceptionDate'];
+            $conceptionDate = strtotime($conceptionDate);
+            $conceptionDate = date('d-m-Y', $conceptionDate);
 
-    $dueDate = addDaysToDate($conceptionDate, 285);
+            $lastPeriodDate = addDaysToDate($conceptionDate, -14);
 
-    $month = convertInMonths($duration);
+            $_SESSION['conceptionDate'] = $conceptionDate;
+        }
+    }
 
-    $percentage = number_format(($duration * 100) / 285, '0', '', ' ');
-
-    $echo0A = addDaysToDate($conceptionDate, 36);
-    $echo0B = addDaysToDate($conceptionDate, 63);
-
-    $echo1A = addDaysToDate($conceptionDate, 71);
-    $echo1B = addDaysToDate($conceptionDate, 98);
-
-    $echo2A = addDaysToDate($conceptionDate, 134);
-    $echo2B = addDaysToDate($conceptionDate, 175);
-
-    $echo3A = addDaysToDate($conceptionDate, 204);
-    $echo3B = addDaysToDate($conceptionDate, 243);
-
-    $app4A = addDaysToDate($conceptionDate, 106);
-    $app4B = addDaysToDate($conceptionDate, 136);
-
-    $app5A = addDaysToDate($conceptionDate, 137);
-    $app5B = addDaysToDate($conceptionDate, 167);
-
-    $app6A = addDaysToDate($conceptionDate, 168);
-    $app6B = addDaysToDate($conceptionDate, 198);
-
-    $app7A = addDaysToDate($conceptionDate, 200);
-    $app7B = addDaysToDate($conceptionDate, 227);
-
-    $app8A = addDaysToDate($conceptionDate, 228);
-    $app8B = addDaysToDate($conceptionDate, 257);
-
-    $app9A = addDaysToDate($conceptionDate, 258);
-    $app9B = addDaysToDate($conceptionDate, 287);
-
-    $prematureDate = addDaysToDate($conceptionDate, 253);
-    $anesth = addDaysToDate($conceptionDate, 257);
-    $vagA = addDaysToDate($conceptionDate, 239);
-    $vagB = addDaysToDate($conceptionDate, 266);
+    $dueDate = addDaysToDate($conceptionDate, 273);
 
     echo "
     <div class='app' id='app'>
@@ -87,19 +49,21 @@ function displayDelivery()
             <div class='main'>
                 <div class='main__text'>
                     <h1 class='title'>
-                       CALENDRIERS-GROSSESSE
+                       CALCUL DE LA DATE D'ACCOUCHEMENT
                     </h1>
-                    <p class='text text-center'>
-                        Toutes les dates importantes de votre grossesse
-                    </p>
                 </div>
 
-                <div class='items'>
-                    <form class='proceed' action='#' method='POST'>
+                <div class='items text-center'>
+                    <form class='proceed mx-auto' action='#' method='POST'>
                         <div class='form'>
-                            <label for=''>
-                                <p>Date des dernières règles:</p>
-                                <input type='date' class='date' name='lastPeriodDate'>
+                        <input type='hidden' value=$conceptionDate
+                        id='conceptionDate' style='display: none'>
+
+                        <label for=''>
+                        <p>Date des dernières règles: </p>
+                        <input class='date mx-auto text-center' name='lastPeriodDate' type='text'
+                        onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                         placeholder='$lastPeriodDate' id='lastPeriodDatee'>
                             </label>
 
                             <div class='or'>
@@ -107,36 +71,26 @@ function displayDelivery()
                             </div>
 
                             <label for=''>
-                                <p>Date de conception:</p>
-                                <input type='date' class='date'  name='conceptionDate'>
+                            <p>Date des dernières règles: </p>
+                            <input class='date mx-auto text-center'
+                            name='conceptionDate' type='text'
+                            onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                             placeholder='$conceptionDate' id='conceptionDatee'>
                             </label>
 
                         </div>
 
-                        <button  type='submit' class='btn btn-primary' style='background: #f0c7c2;;
-                                    border: none; color: black;'>
+                        <button  type='submit' class='btn btn-primary' style='background-color: #fa899c;
+                        border: none; color: white;'>
                             Calculer
                         </button>
                     </form>
-
-                    <div class='results'>
-                       <div class='results__top'>
-                       <h2 class='subtitle'>
-                      MON CALENDRIER DE GROSSESSE <span><a href='#calendar'><i
-                                   class='fas fa-question'></i></a></span>
-                   </h2>
-                   <p class='text text-justify'>
-                       Date d'accouchement prévue': <span> $dueDate </span> <br>
-
-                   </p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class='item' id='calendar'>
                 <h2>
-                    CALCUL DATE ACCOUCHEMENT
+                   DATE D'ACCOUCHEMENT
                 </h2>
 
 
@@ -150,79 +104,38 @@ function displayDelivery()
                 En cas de dépassement de la DPA, les médecins peuvent recommander des mesures pour déclencher l'accouchement, telles que l'administration d'ocytocine ou une césarienne. Cependant, il est important de noter que chaque grossesse est unique et que les décisions concernant l'accouchement doivent être prises au cas par cas, en tenant compte de la santé de la mère et du bébé.
                 </p>
             </div>
-            <hr>
+            <hr> <br>
 
-            <div class='item' id='vacancies'>
-                <h2>
-                    DATES CONGES MATERNITE
-                </h2>
+            <div class='bottom'>
+                        <h2 class='subtitle'>
+                            DATE D'ACCOUCHEMENT:
+                        </h2>
+                        <p class='text text-justify'>
+                            Date d'accouchement prévue: <span> $dueDate</span> <br>
 
-                <p class='text text-justify' v-if='results != null'>
-                    <label for=''>
-                        Nombre d'enfant(s) déjà né(s) : <select name='' id='' v-model='kids' style='height: 28px'>
-                            <option value='0'>0</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                        </select>
-                    </label> <br>
-
-                    <label for=''>
-                        Vous êtes enceinte de <select name='' id='' v-model='kidsComing' style='height: 28px'>
-                            <option value='jumeaux'>Jumeaux</option>
-                            <option value='triples'>Triplés ou plus</option>
-                        </select>
-                    </label>
-
-                    <button class='btn btn-primary ml-0'   style='background-color: #fa899c; border: none;
-                    color: white;' type='submit'>
-                        Calculer
-                    </button>
-                </p>
-                <br>
-
-                <p class='text text-justify' v-if='resultsVac != null'>
-                    <strong> Date limite pour déclarer votre grossesse:</strong> <span>{{ dateOfAnnounement}}</span>
-                    <br>
-
-                    <strong>Date de début de votre congé maternité: </strong> <span>{{ formatDate(dateVacA)}}</span>
-                    <br>
-                    <strong>Date de fin de votre congé maternité:</strong> <span>{{ formatDate(dateVacB)}}</span> <br>
-                    <strong>Vous serez pris en charge à 100% par l'assurance maladie à partir du:</strong>
-                    <span>{{ formatDate(dateCare) }}</span> <br>
-                </p>
-
-
-                <p class='text text-justify'>Pour bénéficier de tous vos droits, vous devez envoyer votre déclaration de
-                    grossesse
-                    dans les 14 premières semaines ou avant la fin du 3e mois.
-                    Le congé maternité est un temps de repos accordé à la mère après l'accouchement pour récupérer et
-                    prendre soin de son nouveau-né. Le calcul de la durée du congé maternité dépend en général, la durée
-                    du
-                    congé maternité est calculée à partir de la date prévue d'accouchement. Il offre également un temps
-                    précieux pour créer des liens avec le nouveau-né, allaiter et prendre soin de lui. Le congé
-                    maternité peut également aider à réduire le risque de complications de santé et à favoriser la
-                    récupération et le bien-être de la mère et du bébé.
-                </p>
+                        </p>
+                        <br>
             </div>
-            <hr>
+                    <hr>
+
 
             <div class='links mx-auto text-center'>
-                <a class='btn btn-primary' style='background-color: #fa899c;
+                <a class='btn btn-primary'  style='background-color: #fa899c;
                 border: none; color: white;'
                     href='https://www.calendriers-grossesse.com/'>
                     Calendrier grossesse
                 </a>
 
-                <a class='btn btn-primary' style='background-color: #fa899c;
+                <a class='btn btn-primary'  style='background-color: #fa899c;
                 border: none; color: white;'
-                    href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
-                    Calcul semaine grossesse
+                    href='https://www.calendriers-grossesse.com/calcul-semaine-de-grossesse/'>
+                    Calcul semaine de grossesse
                 </a>
 
-                <a class='btn btn-primary' style='background-color: #fa899c;
+                <a class='btn btn-primary'  style='background-color: #fa899c;
                 border: none; color: white;'
-                    href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
-                    Calcul mois grossesse
+                    href='https://www.calendriers-grossesse.com/calcul-mois-de-grossesse/'>
+                    Calcul mois de grossesse
                 </a>
 
             </div>
@@ -281,6 +194,3 @@ function displayDelivery()
 }
 
 add_shortcode('due', 'displayDelivery');
-// Start session on init hook.
-add_action('init', 'wpse16119871_init_session');
-//add_action('wp_enqueue_scripts', 'displaySolidaire');

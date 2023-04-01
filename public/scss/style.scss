@@ -307,9 +307,9 @@ table {
 }
 
 @media(min-width: 350px) and(max-width: 767px){
-    h1{
-        font-size: 2em;
-    }
+  .content{
+    padding-top: 5px;
+
     .main{
         width: 100%;
         flex-direction: column;
@@ -332,7 +332,6 @@ table {
                 margin: auto auto 5px auto;
 
                 .form{
-                    width: 65%;
 
                     label{
                         width: 190px;
@@ -340,7 +339,7 @@ table {
                     }
 
                     .or{
-                        padding-left: 45%;
+                        left: 45%;
                     }
                 }
             }
@@ -374,8 +373,9 @@ table {
         }
 
         .weeks, .months{
-            width: 95%;
+            width: 98%;
         }
     }
+  }
 
 }
