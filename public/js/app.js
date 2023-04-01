@@ -3,207 +3,158 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      results: null,
-      detail: '',
-      errorMsg: '',
-      successMessage: '',
       durationInMs: '',
       durationInDays: '',
       durationInWeeks: '',
       durationInMonths: '',
       dueDate: '',
       dueDateFormated: '',
-      AndurationInDays: '',
-      AndurationInDays: '',
-      Anduration: '',
-
+      dateOfAnnounement: '',
       dateVacA: '',
       dateVacB:'',
       dateCare: '',
       kids: '',
       kidsComing: '',
       resultsVac: null,
-      prematureDate: '',
-      anesthDate: '',
-      dateVagA: '',
-      dateVagB: '',
       cycle: '',
       resultsFert: null,
       fecondDateA: '',
       fecondDateB: '',
-      showCalendar: false,
-      calendar: [],
-      showButton: false,
-      currentWeek: '',
-      lastPeriodDate: '',
+      showButtons: true,
       conceptionDate: '',
-      userId: ''
+      lastPeriodDate: ''
+
     }
   },
+  mounted() {
+    this.sayHi();
+  },
   computed: {
-    },
-  mounted: function() {
-    this.userId = document.getElementById('lastPeriodDate').value;
 
   },
   methods: {
-    proceed(){
-      if (this.lastPeriodDate === '' && this.conceptionDate === '') {
-        alert('Veuillez renseigner soit la date des dernières règles soit celle de la conception');
-      } else {
+    sayHi(){
+      this.conceptionDate = document.getElementById('conceptionDate').value;
 
-        if (this.conceptionDate === '') {
-          const startDate = new Date(this.lastPeriodDate);
-          startDate.setDate(startDate.getDate() + 14);
-        this.conceptionDate = startDate;
-        } else{
-          const startDate = new Date(this.conceptionDate);
-          startDate.setDate(startDate.getDate());
-        this.conceptionDate = startDate;
-        }
+      function addDaysToDate(date, daysToAdd) {
+        // Split the date into day, month, and year components
+        const dateComponents = date.split('-');
+        const day = parseInt(dateComponents[0]);
+        const month = parseInt(dateComponents[1]) - 1;
+        const year = parseInt(dateComponents[2]);
 
-        const today = new Date();
+        // Create a new Date object with the specified date components
+        const originalDate = new Date(year, month, day);
 
-        this.durationInMs = today - this.conceptionDate;
-        this.durationInDays = Math.floor((this.durationInMs / 1000 / 60 / 60 / 24));
+        // Add the specified number of days to the original date
+        const newDate = new Date(originalDate.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
 
-        if(this.durationInMs < 0){
-         alert("Merci de vérifier la date insérée");
-         exit();
-        }
+        // Format the new date as "DD-MM-YYYY"
+        const newDay = ("0" + newDate.getDate()).slice(-2);
+        const newMonth = ("0" + (newDate.getMonth() + 1)).slice(-2);
+        const newYear = newDate.getFullYear();
+        const formattedDate = `${newDay}-${newMonth}-${newYear}`;
 
-        if(this.durationInDays > 300){
-          alert("Merci de vérifier la date insérée")
-        }
+        return formattedDate;
       }
-      },
+
+    this.lastPeriodDate = addDaysToDate(this.conceptionDate, -14);
+
+    },
     proceedVac(){
         //vacancies
-        if (this.kids === '' && this.kidsComing === '') {
+        if (this.kids === '' || this.kidsComing === '') {
             alert('Merci de renseigner des informations pour le calcul')
         }else{
           this.resultsVac = 'ok';
 
-          function addDays(date, days) {
-            var result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
+          function addDaysToDate(date, daysToAdd) {
+            // Split the date into day, month, and year components
+            const dateComponents = date.split('-');
+            const day = parseInt(dateComponents[0]);
+            const month = parseInt(dateComponents[1]) - 1;
+            const year = parseInt(dateComponents[2]);
+
+            // Create a new Date object with the specified date components
+            const originalDate = new Date(year, month, day);
+
+            // Add the specified number of days to the original date
+            const newDate = new Date(originalDate.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
+
+            // Format the new date as "DD-MM-YYYY"
+            const newDay = ("0" + newDate.getDate()).slice(-2);
+            const newMonth = ("0" + (newDate.getMonth() + 1)).slice(-2);
+            const newYear = newDate.getFullYear();
+            const formattedDate = `${newDay}-${newMonth}-${newYear}`;
+
+            return formattedDate;
           }
 
-
-          let days1 = 0;
-          let days2 = 0;
-          let days3 = 0
-
-
         if(this.kids < 2){
-          days1 = 245;
-             days2 = 111;
-             days3=153;
+          this.dateVacA = addDaysToDate(this.conceptionDate, 231);
+        this.dateVacB = addDaysToDate(this.conceptionDate, 342);
+        this.dateCare = addDaysToDate(this.conceptionDate, 153);
       }
 
         if(this.kids >= 2){
-          days1 = 231;
-             days2 = 181;
-             days3=153;
+          this.dateVacA = addDaysToDate(this.conceptionDate, 217);
+          this.dateVacB = addDaysToDate(this.conceptionDate, 398);
+          this.dateCare = addDaysToDate(this.conceptionDate, 153);
         }
 
         if(this.kidsComing == 'jumeaux'){
-          days1 = 189;
-             days2 = 425;
-             days3=153;
+          this.dateVacA = addDaysToDate(this.conceptionDate, 189);
+        this.dateVacB = addDaysToDate(this.conceptionDate, 426);
+        this.dateCare = addDaysToDate(this.conceptionDate, 153);
         }
 
 
-        if(this.kidsComing == 'triplés'){
-          days1 = 93;
-          days2 = 425;
-          days3=153;
+        if(this.kidsComing == 'Triples'){
+          this.dateVacA = addDaysToDate(this.conceptionDate, 105);
+        this.dateVacB = addDaysToDate(this.conceptionDate, 426);
+        this.dateCare = addDaysToDate(this.conceptionDate, 153);
         }
-
-
-        this.dateVacA = addDays(this.conceptionDate, days1);
-        this.dateVacB = addDays(this.conceptionDate, days2);
-        this.dateCare = addDays(this.conceptionDate, days3);
         }
       },
-    proceedFert(){
+      proceedFert(){
         if(this.cycle == ''){
             alert('Veuillez insérer des informations pour le calcul')
         }else{
           this.resultsFert = 'ok';
 
-            function addDays(date, days) {
-                var result = new Date(date);
-                result.setDate(result.getDate() + days);
-                return result;
-              }
+          function addDaysToDate(date, daysToAdd) {
+            // Split the date into day, month, and year components
+            const dateComponents = date.split('-');
+            const day = parseInt(dateComponents[0]);
+            const month = parseInt(dateComponents[1]) - 1;
+            const year = parseInt(dateComponents[2]);
+
+            // Create a new Date object with the specified date components
+            const originalDate = new Date(year, month, day);
+
+            // Add the specified number of days to the original date
+            const newDate = new Date(originalDate.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
+
+            // Format the new date as "DD-MM-YYYY"
+            const newDay = ("0" + newDate.getDate()).slice(-2);
+            const newMonth = ("0" + (newDate.getMonth() + 1)).slice(-2);
+            const newYear = newDate.getFullYear();
+            const formattedDate = `${newDay}-${newMonth}-${newYear}`;
+
+            return formattedDate;
+          }
 
             if(this.cycle == 24){
-              this.fecondDateA =  addDays(this.lastPeriodDate,  12);
+              this.fecondDateA =  addDaysToDate(this.conceptionDate,  12);
           } else if(this.cycle == 28){
-            this.fecondDateA =  addDays(this.lastPeriodDate,  14);
+            this.fecondDateA =  addDaysToDate(this.conceptionDate,  14);
           } else if(this.cycle == 36){
-            this.fecondDateA =  addDays(this.lastPeriodDate,  18);
+            this.fecondDateA =  addDaysToDate(this.conceptionDate,  18);
           }
             }
 
-            this.fecondDateB =  addDays(this.fecondDateA, 2);
+            this.fecondDateB =  addDaysToDate(this.conceptionDate, 2);
       },
-
-      convertir(jours) {
-        const joursParMois = 30.44;
-        const joursParSemaine = 7;
-
-        const mois = Math.floor(jours / joursParMois);
-        const resteMois = jours % joursParMois;
-
-        const semaines = Math.floor(resteMois / joursParSemaine);
-        const resteSemaines = resteMois % joursParSemaine;
-
-        const joursRestants = Math.floor(resteSemaines);
-
-
-        const moisPluriel = mois > 1 ? "mois" : "mois";
-        const semainesPluriel = semaines > 1 ? "semaines" : "semaine";
-        const joursPluriel = joursRestants > 1 ? "jours" : "jour";
-
-        return `${mois} ${moisPluriel}, ${semaines} ${semainesPluriel} et ${joursRestants} ${joursPluriel}`;
-      },
-      convertInWeeks(jours) {
-        const joursParSemaine = 7;
-
-        const semaines = Math.floor(jours / joursParSemaine);
-        const resteSemaines = jours % joursParSemaine;
-
-        const joursRestants = Math.floor(resteSemaines);
-
-        const semainesPluriel = semaines > 1 ? "semaines" : "semaine";
-        const joursPluriel = joursRestants > 1 ? "jours" : "jour";
-
-        return ` ${semaines} ${semainesPluriel} et ${joursRestants} ${joursPluriel}`;
-      },
-
-       formatDate(date) {
-        const options = {
-          weekday: 'short',
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        };
-        const locale = 'fr-FR';
-      //  const formattedDate = date.toLocaleString(locale, options);
-     //   return formattedDate;
-     return date;
-      },
-    format(num){
-    let res = new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 1 }).format(num);
-    return res;
-},
-    getImgUrl(pic) {
-    return "public/img/" + pic;
-}
-
   },
 
   }).mount('#app')

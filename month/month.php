@@ -13,36 +13,64 @@
  * Domain Path:       /month
  */
 
-function wpse16119872_init_session()
+function wpse16119877_init_session()
 {
     if (!session_id()) {
         session_start();
     }
+}
 
-    if (isset($_POST['lastPeriodDate'])) {
-        $_SESSION['arrayImg'] = $_POST['lastPeriodDate'];
+function getMonthsArray($startDate, $endDate)
+{
+    $months = [];
+    $currentMonth = [];
+    $currentDate = new DateTime($startDate);
+    while ($currentDate <= new DateTime($endDate)) {
+        $currentMonth[] = $currentDate->format('Y-m-d');
+        $currentDate->add(new DateInterval('P1D'));
+        if (
+            $currentDate->format('d') === '01' ||
+            $currentDate > new DateTime($endDate)
+        ) {
+            $months[] = $currentMonth;
+            $currentMonth = [];
+        }
     }
-
-    if (array_key_exists('arrayImg', $_SESSION)) {
-        $abc = $_SESSION['arrayImg'];
-    } else {
-        $abc = 'NOT IN SESSION DATA';
-    }
+    return $months;
 }
 
 function displayMonth()
 {
-    $conceptionDate = '01/01/2023';
+    $lastPeriodDate = $_SESSION['lastPeriodDate'];
+    $conceptionDate = $_SESSION['conceptionDate'];
+
+    $cycle = null;
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_POST['lastPeriodDate'] != '') {
+            $lastPeriodDate = $_POST['lastPeriodDate'];
+            $lastPeriodDate = strtotime($lastPeriodDate);
+            $lastPeriodDate = date('d-m-Y', $lastPeriodDate);
+            $conceptionDate = addDaysToDate($lastPeriodDate, 14);
+            $_SESSION['conceptionDate'] = $conceptionDate;
+            $_SESSION['lastPeriodDate'] = $lastPeriodDate;
+        }
+
+        if ($_POST['conceptionDate'] != '') {
+            $conceptionDate = $_POST['conceptionDate'];
+            $conceptionDate = strtotime($conceptionDate);
+            $conceptionDate = date('d-m-Y', $conceptionDate);
+
+            $lastPeriodDate = addDaysToDate($conceptionDate, -14);
+
+            $_SESSION['conceptionDate'] = $conceptionDate;
+            $_SESSION['lastPeriodDate'] = $lastPeriodDate;
+        }
+    }
 
     $duration = calculDuration($conceptionDate);
 
-    $convertedDuration = convertInWeeks($duration);
-
-    $convertedAnDuration = convertInWeeks(calculDuration($conceptionDate) + 14);
-
     $month = convertInMonths($duration);
-
-    $percentage = number_format(($duration * 100) / 285, '0', '', ' ');
 
     $echo0A = addDaysToDate($conceptionDate, 36);
     $echo0B = addDaysToDate($conceptionDate, 63);
@@ -74,104 +102,99 @@ function displayMonth()
     $app9A = addDaysToDate($conceptionDate, 258);
     $app9B = addDaysToDate($conceptionDate, 287);
 
-    $prematureDate = addDaysToDate($conceptionDate, 253);
-    $anesth = addDaysToDate($conceptionDate, 257);
-    $vagA = addDaysToDate($conceptionDate, 239);
-    $vagB = addDaysToDate($conceptionDate, 266);
+    $today = new DateTime();
+
+    $date = strtotime($conceptionDate);
+
+    $endDatee = addDaysToDate($conceptionDate, 275);
+
+    $monthsArray = getMonthsArray($conceptionDate, $endDatee);
+
     echo "
     <div class='app' id='app'>
     <div class='content'>
     <div class='main'>
     <div class='main__text'>
         <h1 class='title'>
-            CALENDRIERS-GROSSESSE
+            CALCUL MOIS DE GROSSESSE
         </h1>
         <p class='text text-center'>
             Toutes les dates importantes de votre grossesse
         </p>
     </div>
 
-    <div class='items'>
-        <form class='proceed' action='#' method='POST'>
+    <div class='items text-center'>
+        <form class='proceed mx-auto' action='#' method='POST'>
             <div class='form'>
-                <label for=''>
-                    <p>Date des dernières règles:</p>
-                    <input type='date' class='date' v-model='lastPeriodDate' name='lastPeriodDate'>
-                </label>
+            <input type='hidden' value=$conceptionDate
+                        id='conceptionDate' style='display: none'>
 
-                <div class='or'>
-                    Ou
-                </div>
+                        <label for=''>
+                        <p>Date des dernières règles: </p>
+                        <input class='date mx-auto text-center' name='lastPeriodDate' type='text'
+                        onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                         placeholder='$lastPeriodDate' id='lastPeriodDatee'>
+                            </label>
 
-                <label for=''>
-                    <p>Date de conception</p>
-                    <input type='date' class='date' v-model='conceptionDate' name='conceptionDate'>
-                </label>
+                            <div class='or'>
+                                Ou
+                            </div>
+
+                            <label for=''>
+                            <p>Date de conception: </p>
+                            <input class='date mx-auto text-center'
+                            name='conceptionDate' type='text'
+                            onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                             placeholder='$conceptionDate' id='conceptionDatee'>
+                            </label>
 
             </div>
 
-            <button @click='proceed()' type='submit' class='btn btn-primary' style='background: #f0c7c2;
-                        border: none; color: black;'>
-                Calculer
-            </button>
+            <button class='btn btn-primary ml-0'   style='background-color: #fa899c; border: none;
+                        color: white;' type='submit'>
+                            Calculer
+                        </button>
         </form>
-
-        <div class='results'>
-            <div class='results__top'>
-                    <h2 class='subtitle'>
-                    Mon calendrier de grossesse <span><a href='#calendar'><i
-                                class='fas fa-question'></i></a></span>
-                </h2>
-                <p class='text text-justify'>
-                  Aujourd'hui, vous êtes dans votre <span>$month de grossesse</span> <br>
-                    bravo, vous avez fait: <span> $percentage % du
-                        chemin</span>
-                    <br>
-
-        </p>
-
-            </div>
-        </div>
     </div>
 </div>
 
         <div class='item' id='calendar'>
             <h2>
-                CALCUL MOIS DE GROSSESSE
+            CALENDRIER DE VOTRE GROSSESSE MOIS PAR MOIS
             </h2>
 
-            <button class='btn btn-primary' @click='proceedCalendar()' v-if='showButton' style='background-color: #393F82;
-            color: #f0c7c2'>
-                Afficher le calendrier
-            </button>
+            <div class='months' v-if='conceptionDate !=``'>
+            <div class='container table p-3'>
+                <div class='tr row'>";
+    foreach ($monthsArray as $index => $month):
 
-            <div class='calendar mb-3' v-if='showCalendar'>
-                <div class='close mr-2 mt-1' @click='closeCalendar()'>
-                    X
-                </div>
-                <p class='text text-center mt-2'>
-                    Mois de grossesse: {{ currentWeek +1}}
-                </p>
-                <div class='weeks'>
-                    <div class='container'>
-                        <div class='row'>
-                            <div v-for='(week, index) in calendar' :key='index' class='week col-sm-12 col-md-2'
-                                :class='{ box: index === currentWeek }'>
-                                <h4>Semaine {{ index + 1 }}</h4>
-                                <ul>
-                                    <li v-for='(day, dayIndex) in week' :key='dayIndex'>
-                                        {{ day }}
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+        $currentMonthClass = '';
+        $firstDayOfCurrentMonth = new DateTime($month[0]);
+        $lastDayOfCurrentMonth = new DateTime(end($month));
+        if (
+            $today >= $firstDayOfCurrentMonth &&
+            $today <= $lastDayOfCurrentMonth
+        ) {
+            $currentMonthClass = ' current-month';
+        }
+        ?>
 
 
+
+<div class='td month col-4 mx-auto<?= $currentMonthClass ?>'>
+    <p class='text text-center'><?php
+    setlocale(LC_TIME, 'fr_FR.UTF-8');
+    echo strftime('%B %Y', $firstDayOfCurrentMonth->getTimestamp());
+    ?></p>
+</div>
+<?php
+    endforeach;
+    echo "</div>
             </div>
-            <p class='text text-justify'>
+        </div>
+
+
+            <p class='text'>
                 Le calendrier de grossesse d'une femme est un outil utile pour suivre les différentes étapes de la
                 grossesse et s'assurer que tout se passe bien pour la mère et le bébé. Il commence généralement à la
                 date prévue de la dernière période menstruelle et se poursuit jusqu'à la naissance du bébé, soit
@@ -186,23 +209,29 @@ function displayMonth()
                 CALENDRIER DES ECHOGRAPHIES
             </h2>
 
-            <p class='text text-justify'>
-                Echographie précoce: entre le <span> $echo0A</span>
-                et le <span> $echo0B </span>
-                <br>
+           ";
+    if ($conceptionDate != '') {
+        echo "
+            <p class='text' >
+            Echographie précoce: entre le <span v-if='conceptionDate !=``'> $echo0A</span>
+            et le <span v-if='conceptionDate !=``'> $echo0B </span>
+            <br>
 
-                1ère échographie recommandée: entre le <span> $echo1A </span> et le
-                <span> $echo1B </span> <br>
+            1ère échographie recommandée: entre le <span v-if='conceptionDate !=``'> $echo1A </span> et le
+            <span v-if='conceptionDate !=``'> $echo1B </span> <br>
 
-                2ème échographie recommandée: entre le <span> $echo2A </span>
-                et le <span> $echo2B </span> <br>
+            2ème échographie recommandée: entre le <span v-if='conceptionDate !=``'> $echo2A </span>
+            et le <span v-if='conceptionDate !=``'> $echo2B </span> <br>
 
-                3ème échographie recommandée:
-                entre le <span> $echo3A </span> et le
-                <span> $echo3B </span>
-            </p>
+            3ème échographie recommandée:
+            entre le <span v-if='conceptionDate !=``'> $echo3A </span> et le
+            <span v-if='conceptionDate !=``'> $echo3B </span>
+        </p>
+           ";
+    }
+    echo "
 
-            <p class='text text-justify'>
+            <p class='text'>
                 Les échographies sont cruciales pour évaluer la croissance et la santé du fœtus. Elles permettent de
                 vérifier la vitalité du fœtus, son âge gestationnel, la position de placenta, la quantité de liquide
                 amniotique et les malformations. Les échographies peuvent être recommandées à différents moments de
@@ -215,29 +244,34 @@ function displayMonth()
     <div class='item' id='appointments'>
         <h2>
             CALENDRIER DES CONSULTATIONS PRENATALES
-        </h2>
+        </h2>";
 
-        <p class='text text-justify'>
-            4ème mois de grossesse: entre le <span> $app4A</span> et le
-            <span> $app4B </span> <br>
+    if ($conceptionDate != '') {
+        echo "
+        <p class='text' >
+            4ème mois de grossesse: entre le <span v-if='conceptionDate !=``'> $app4A</span> et le
+            <span v-if='conceptionDate !=``'> $app4B </span> <br>
 
-            5ème mois de grossesse: entre le <span> $app5A </span> et le
-            <span>$app5B </span> <br>
+            5ème mois de grossesse: entre le <span v-if='conceptionDate !=``'> $app5A </span> et le
+            <span v-if='conceptionDate !=``'>$app5B </span> <br>
 
-            6ème mois de grossesse: entre le <span> $app6A </span> et le
-            <span> $app6B </span> <br>
+            6ème mois de grossesse: entre le <span v-if='conceptionDate !=``'> $app6A </span> et le
+            <span v-if='conceptionDate !=``'> $app6B </span> <br>
 
-            7ème mois de grossesse: entre le <span> $app7A </span> et le
-            <span> $app7B </span> <br>
+            7ème mois de grossesse: entre le <span v-if='conceptionDate !=``'> $app7A </span> et le
+            <span v-if='conceptionDate !=``'> $app7B </span> <br>
 
-            8ème mois de grossesse: entre le <span>$app8A </span> et le
-            <span> $app8B </span> <br>
+            8ème mois de grossesse: entre le <span v-if='conceptionDate !=``'>$app8A </span> et le
+            <span v-if='conceptionDate !=``'> $app8B </span> <br>
 
-            9ème mois de grossesse: entre le <span> $app9A </span> et le
-            <span> $app9B </span>
-        </p>
+            9ème mois de grossesse: entre le <span v-if='conceptionDate !=``'> $app9A </span> et le
+            <span v-if='conceptionDate !=``'> $app9B </span>
+            </p>
+            ";
+    }
+    echo "
 
-        <p class='text text-justify'>
+        <p class='text'>
             Le calcul des dates pendant la grossesse permet de déterminer la date d'accouchement et de
             suivre le
             développement du bébé. Les consultations prénatales sont essentielles pour surveiller la
@@ -250,17 +284,20 @@ function displayMonth()
     <hr>
 
         <div class='links mx-auto text-center'>
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
+            <a class='btn btn-primary'  style='background-color: #fa899c;
+            border: none; color: white;'
                 href='https://www.calendriers-grossesse.com'>
                 Calendrier grossesse
             </a>
 
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82; background-color: bisque;'
-                href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
-                Calcul semaine grossesse
+            <a class='btn btn-primary'   style='background-color: #fa899c;
+            border: none; color: white;'
+                href='https://www.calendriers-grossesse.com/calcul-semaine-de-grossesse/'>
+                Calcul semaine de grossesse
             </a>
 
-            <a class='btn btn-primary' style='color: #393F82; border: #393F82;  background-color: bisque;'
+            <a class='btn btn-primary' style='background-color: #fa899c;
+            border: none; color: white;'
                 href='https://www.calendriers-grossesse.com/calcul-date-daccouchement/'>
                 Calcul date d'accouchement
             </a>
@@ -321,5 +358,5 @@ function displayMonth()
 
 add_shortcode('month', 'displayMonth');
 // Start session on init hook.
-add_action('init', 'wpse16119872_init_session');
+add_action('init', 'wpse16119877_init_session');
 //add_action('wp_enqueue_scripts', 'displaySolidaire');

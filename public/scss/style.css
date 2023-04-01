@@ -188,7 +188,7 @@ html, body {
   padding-top: 7px;
 }
 .item .current-week {
-  border: 8px solid #fa899c;
+  border: 10px solid #fa899c;
 }
 .item table {
   border: 1px solid black;
@@ -207,7 +207,7 @@ html, body {
   justify-content: center;
   align-items: center;
 }
-.item .current-month {
+.item .current-month, .item .current-week {
   border: 10px solid #fa899c;
 }
 .item .text {
@@ -248,7 +248,7 @@ html, body {
 }
 @media (min-width: 350px) and (max-width: 767px) {
   .content {
-    padding-top: 5px;
+    padding-top: 0;
   }
   .content .main {
     width: 100%;
@@ -269,12 +269,18 @@ html, body {
     width: 340px;
     margin: auto auto 5px auto;
   }
+  .content .main .items .proceed .form {
+    text-align: center;
+  }
   .content .main .items .proceed .form label {
     width: 190px;
     height: 100px;
+    margin: 5px auto 20px auto;
   }
   .content .main .items .proceed .form .or {
-    left: 45%;
+    left: 46%;
+    top: 100px;
+    margin: 10px auto 15px auto;
   }
   .content .main .items .btn {
     margin: 5px auto;

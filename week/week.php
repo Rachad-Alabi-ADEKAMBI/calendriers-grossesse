@@ -12,20 +12,6 @@
  * Text Domain:       week
  * Domain Path:       /week
  */
-/*
-function wpse16119872_init_session()
-{
-    if (!session_id()) {
-        session_start();
-    }
-
-    if (array_key_exists('conceptionDate', $_SESSION)) {
-        $abc = $_SESSION['conceptionDate'];
-    } else {
-        $abc = 'NOT IN SESSION DATA';
-    }
-}
-*/
 
 function addDaysToDate($date, $daysToAdd)
 {
@@ -76,12 +62,8 @@ function convertInMonths($numberOfDays)
 
 function displayWeek()
 {
-    if (!session_id()) {
-        session_start();
-    } else {
-        $lastPeriodDate = $_SESSION['lastPeriodDate'];
-        $conceptionDate = $_SESSION['conceptionDate'];
-    }
+    $lastPeriodDate = $_SESSION['lastPeriodDate'];
+    $conceptionDate = $_SESSION['conceptionDate'];
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($_POST['lastPeriodDate'] != '') {
@@ -91,9 +73,6 @@ function displayWeek()
             $conceptionDate = addDaysToDate($lastPeriodDate, 14);
             $_SESSION['conceptionDate'] = $conceptionDate;
             $_SESSION['lastPeriodDate'] = $lastPeriodDate;
-        } else {
-            $lastPeriodDate = $_SESSION['lastPeriodDate'];
-            $conceptionDate = $_SESSION['conceptionDate'];
         }
 
         if ($_POST['conceptionDate'] != '') {
@@ -104,9 +83,6 @@ function displayWeek()
             $lastPeriodDate = addDaysToDate($conceptionDate, -14);
 
             $_SESSION['conceptionDate'] = $conceptionDate;
-        } else {
-            $conceptionDate = $_SESSION['conceptionDate'];
-            $lastPeriodDate = $_SESSION['lastPeriodDate'];
         }
     }
 
@@ -148,6 +124,7 @@ function displayWeek()
     echo "
     <div class='app' id='app'>
 
+
     <div class='content'>
 
         <div class='main'>
@@ -161,27 +138,30 @@ function displayWeek()
             </div>
 
             <div class='items'>
+
             <form class='proceed' action='#' method='POST'>
             <div class='form'>
 
             <input type='hidden' value=$conceptionDate
-            id='conceptionDate' >
+            id='conceptionDate' style='display: none'>
 
             <label for=''>
             <p>Date des dernières règles: </p>
-            <input class='date mx-auto text-center' name='lastPeriodDate' type=`text` placeholder=$lastPeriodDate
-                onfocus='(this.type=`date`)' onblur=`(this.type='text')` style='width:150px;'>
+            <input class='date mx-auto text-center' name='lastPeriodDate' type='text'
+            onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+             placeholder='$lastPeriodDate'>
                 </label>
 
                 <div class='or'>
                     Ou
                 </div>
 
-
                 <label for=''>
-                <p>Date des dernières règles: </p>
-                <input class='date mx-auto text-center' name='conceptionDate' type=`text` placeholder=$conceptionDate
-                onfocus='(this.type=`date`)' onblur=`(this.type='text')` style='width:150px; '>
+                <p>Date de conception: </p>
+                <input class='date mx-auto text-center'
+                name='conceptionDate' type='text'
+                onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                 placeholder='$conceptionDate'>
                 </label>
 
 
@@ -192,15 +172,14 @@ function displayWeek()
             Calculer
          </button>
         </form>
-
                 <div class='results'>
                     <div class='results__top'>
                     <h2 class='subtitle'>
                     MON CALENDRIER DE GROSSESSE
                 </h2>
                 <p class='text'>
-                    Vous êtes enceinte de: <span v-if='conceptionDate != ``'> $convertedDuration </span> <br>
-                    Durée d'aménorrhées (absence de règles): <span v-if='conceptionDate != ``'> $convertedAnDuration </span> <br>
+                    Vous êtes enceinte de: <span v-if='conceptionDate !=``'> $convertedDuration </span> <br>
+                    Durée d'aménorrhées (absence de règles): <span  v-if='conceptionDate !=``'> $convertedAnDuration </span> <br>
                     <br>
 
                 </p>
@@ -216,7 +195,7 @@ function displayWeek()
             </h2>
 
 
-            <div class='weeks'>
+            <div class='weeks' v-if='conceptionDate != ``'>
             <div class='container table'>
                 <div class='tr row'>";
     foreach ($weeksArray as $index => $week):
@@ -260,14 +239,14 @@ function displayWeek()
         <div class='links mx-auto text-center'>
             <a class='btn btn-primary'   style='background-color: #fa899c;
             border: none; color: white;'
-                href='https://www.calendriers-grossesse.com/calcul-semaine-grossesse/'>
-                Calcul semaine grossesse
+                href='https://www.calendriers-grossesse.com/calcul-semaine-de-grossesse/'>
+                Calcul semaine de-grossesse
             </a>
 
             <a class='btn btn-primary'  style='background-color: #fa899c;
             border: none; color: white;'
-                href='https://www.calendriers-grossesse.com/calcul-mois-grossesse/'>
-                Calcul mois grossesse
+                href='https://www.calendriers-grossesse.com/calcul-mois-de-grossesse/'>
+                Calcul mois de grossesse
             </a>
 
             <a class='btn btn-primary'   style='background-color: #fa899c;

@@ -227,7 +227,7 @@ html, body{
     }
 
     .current-week {
-        border: 8px solid $pink;
+        border: 10px solid #fa899c;
     }
 
 
@@ -251,7 +251,7 @@ table {
     align-items: center;
 }
 
-.current-month {
+.current-month, .current-week {
     border: 10px solid #fa899c;
 }
 
@@ -308,7 +308,7 @@ table {
 
 @media(min-width: 350px) and(max-width: 767px){
   .content{
-    padding-top: 5px;
+    padding-top: 0;
 
     .main{
         width: 100%;
@@ -332,14 +332,17 @@ table {
                 margin: auto auto 5px auto;
 
                 .form{
-
+                        text-align: center;
                     label{
                         width: 190px;
                         height: 100px;
+                        margin: 5px auto 20px auto;
                     }
 
                     .or{
-                        left: 45%;
+                        left: 46%;
+                        top: 100px;
+                        margin: 10px auto 15px auto;
                     }
                 }
             }

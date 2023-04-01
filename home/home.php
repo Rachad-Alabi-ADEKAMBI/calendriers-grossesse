@@ -17,27 +17,18 @@ function wpse1611987_init_session()
 {
     if (!session_id()) {
         session_start();
-        echo 'no session';
-    } else {
-        echo 'session';
     }
 }
 
 function displayHome()
 {
-    if (array_key_exists('conceptionDate', $_SESSION)) {
-        $abc = $_SESSION['conceptionDate'];
-        $conceptionDate = $_SESSION['conceptionDate'];
-        $lastPeriodDate = $_SESSION['lastPeriodDate'];
-    } else {
-        $abc = 'NOT IN SESSION DATA';
-        $conceptionDate = 'JJ-MM-AAAA';
-        $lastPeriodDate = 'JJ-MM-AAAA';
-    }
-    echo $lastPeriodDate;
+    $lastPeriodDate = $_SESSION['lastPeriodDate'];
+    $conceptionDate = $_SESSION['conceptionDate'];
+
+    $cycle = null;
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if ($_POST['lastPeriodDate'] != 'JJ-MM-AAAA') {
+        if ($_POST['lastPeriodDate'] != '') {
             $lastPeriodDate = $_POST['lastPeriodDate'];
             $lastPeriodDate = strtotime($lastPeriodDate);
             $lastPeriodDate = date('d-m-Y', $lastPeriodDate);
@@ -46,7 +37,7 @@ function displayHome()
             $_SESSION['lastPeriodDate'] = $lastPeriodDate;
         }
 
-        if ($_POST['conceptionDate'] != 'JJ-MM-AAAA') {
+        if ($_POST['conceptionDate'] != '') {
             $conceptionDate = $_POST['conceptionDate'];
             $conceptionDate = strtotime($conceptionDate);
             $conceptionDate = date('d-m-Y', $conceptionDate);
@@ -54,9 +45,7 @@ function displayHome()
             $lastPeriodDate = addDaysToDate($conceptionDate, -14);
 
             $_SESSION['conceptionDate'] = $conceptionDate;
-        } else {
-            $conceptionDate = $_SESSION['conceptionDate'];
-            $lastPeriodDate = $_SESSION['lastPeriodDate'];
+            $_SESSION['lastPeriodDate'] = $lastPeriodDate;
         }
     }
 
@@ -67,6 +56,8 @@ function displayHome()
     $convertedAnDuration = convertInWeeks(calculDuration($conceptionDate) + 14);
 
     $month = convertInMonths($duration);
+
+    $percentage = number_format(($duration * 100) / 284, '0', '', ' ');
 
     $echo0A = addDaysToDate($conceptionDate, 36 - 14);
     $echo0B = addDaysToDate($conceptionDate, 63 - 14);
@@ -118,34 +109,34 @@ function displayHome()
 
 
                 <div class='items'>
-                    <form class='proceed' action='#' method='POST'>
+                    <form class='proceed' action='#' method='POST' id='myForm'>
                         <div class='form'>
 
                         <input type='hidden' value=$conceptionDate
-                        id='conceptionDate' >
+                        id='conceptionDate' style='display: none'>
 
                         <label for=''>
                         <p>Date des dernières règles: </p>
-                        <input class='date mx-auto text-center' name='lastPeriodDate' type=`text` placeholder=$lastPeriodDate
-                            onfocus='(this.type=`date`)' onblur=`(this.type='text')` style='width:150px;'>
+                        <input class='date mx-auto text-center' name='lastPeriodDate' type='text'
+                        onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                         placeholder='$lastPeriodDate' id='lastPeriodDatee'>
                             </label>
 
                             <div class='or'>
                                 Ou
                             </div>
 
-
                             <label for=''>
-                            <p>Date des dernières règles: </p>
-                            <input class='date mx-auto text-center' name='conceptionDate' type=`text` placeholder=$conceptionDate
-                            onfocus='(this.type=`date`)' onblur=`(this.type='text')` style='width:150px; '>
+                            <p>Date de conception: </p>
+                            <input class='date mx-auto text-center'
+                            name='conceptionDate' type='text'
+                            onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
+                             placeholder='$conceptionDate' id='conceptionDatee'>
                             </label>
-
-
                             </div>
 
                         <button class='btn btn-primary ml-0' style='background-color: #fa899c; border: none;
-                                                color: white;' type='submit'>
+                                                color: white;' onclick='validate()'  type='submit' >
                         Calculer
                      </button>
                     </form>
@@ -156,12 +147,12 @@ function displayHome()
                                 MON CALENDRIER DE GROSSESSE
                             </h2>
                             <p class='text'>
-                                Vous êtes enceinte de: <span v-if='conceptionDate != `JJ-MM-AAAA`'>$convertedDuration</span> <br>
-                                Durée d'aménorrhées (absence de règles): <span v-if='conceptionDate != `JJ-MM-AAAA`'> $convertedAnDuration</span>
+                                Vous êtes enceinte de: <span v-if='conceptionDate != ``'>$convertedDuration</span> <br>
+                                Durée d'aménorrhées (absence de règles): <span v-if='conceptionDate != ``'> $convertedAnDuration</span>
 
                                 <br>
-                                Vous êtes dans le : <span v-if='conceptionDate != `JJ-MM-AAAA`'> $month </span> <br>
-                                Date de conception: <span v-if='conceptionDate != `JJ-MM-AAAA`'>$conceptionDate</span><br>
+                                Vous êtes dans le : <span v-if='conceptionDate != ``'> $month </span> <br>
+                                Date de conception: <span v-if='conceptionDate != ``'>$conceptionDate</span><br>
                                 <br>
 
                             </p>
@@ -172,19 +163,19 @@ function displayHome()
                                 DATES D'ECHOGRAPHIE </h2>
 
                             <p class='text'>
-                                Echographie précoce: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo0A</span>
-                                et le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo0B </span>
+                                Echographie précoce: entre le <span v-if='conceptionDate != ``'> $echo0A</span>
+                                et le <span v-if='conceptionDate != ``'> $echo0B </span>
                                 <br>
 
-                                1ère échographie recommandée: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo1A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo1B </span> <br>
+                                1ère échographie recommandée: entre le <span v-if='conceptionDate != ``'> $echo1A </span> et le
+                                <span v-if='conceptionDate != ``'> $echo1B </span> <br>
 
-                                2ème échographie recommandée: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo2A </span>
-                                et le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo2B </span> <br>
+                                2ème échographie recommandée: entre le <span v-if='conceptionDate != ``'> $echo2A </span>
+                                et le <span v-if='conceptionDate != ``'> $echo2B </span> <br>
 
                                 3ème échographie recommandée:
-                                entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo3A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo3B </span>
+                                entre le <span v-if='conceptionDate != ``'> $echo3A </span> et le
+                                <span v-if='conceptionDate != ``'> $echo3B </span>
                             </p>
                         </div>
 
@@ -194,23 +185,23 @@ function displayHome()
                             </h2>
 
                             <p class='text'>
-                                4ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app4A</span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app4B </span> <br>
+                                4ème mois de grossesse: entre le <span v-if='conceptionDate != ``'> $app4A</span> et le
+                                <span v-if='conceptionDate != ``'> $app4B </span> <br>
 
-                                5ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app5A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'>$app5B </span> <br>
+                                5ème mois de grossesse: entre le <span v-if='conceptionDate != ``'> $app5A </span> et le
+                                <span v-if='conceptionDate != ``'>$app5B </span> <br>
 
-                                6ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app6A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app6B </span> <br>
+                                6ème mois de grossesse: entre le <span v-if='conceptionDate != ``'> $app6A </span> et le
+                                <span v-if='conceptionDate != ``'> $app6B </span> <br>
 
-                                7ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app7A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app7B </span> <br>
+                                7ème mois de grossesse: entre le <span v-if='conceptionDate != ``'> $app7A </span> et le
+                                <span v-if='conceptionDate != ``'> $app7B </span> <br>
 
-                                8ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'>$app8A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app8B </span> <br>
+                                8ème mois de grossesse: entre le <span v-if='conceptionDate != ``'>$app8A </span> et le
+                                <span v-if='conceptionDate != ``'> $app8B </span> <br>
 
-                                9ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app9A </span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app9B </span>
+                                9ème mois de grossesse: entre le <span v-if='conceptionDate != ``'> $app9A </span> et le
+                                <span v-if='conceptionDate != ``'> $app9B </span>
                             </p>
                         </div>
 
@@ -219,13 +210,13 @@ function displayHome()
                                 PLUS
                             </h2>
                             <p class='text'>
-                                A partir du <span v-if='conceptionDate != `JJ-MM-AAAA`'>$prematureDate </span>
+                                A partir du <span v-if='conceptionDate != ``'>$prematureDate </span>
                                 votre bébé n'est plus prématuré. <br>
-                                La consultation avec l'anesthésiste est à effectuer à partir du <span v-if='conceptionDate != `JJ-MM-AAAA`'> $anesth
+                                La consultation avec l'anesthésiste est à effectuer à partir du <span v-if='conceptionDate != ``'> $anesth
                                 </span>
                                 <br>
-                                Le prélèvement vaginal est à éffectuer entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'>$vagA</span> et le
-                                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $vagB </span>
+                                Le prélèvement vaginal est à éffectuer entre le <span v-if='conceptionDate != ``'>$vagA</span> et le
+                                <span v-if='conceptionDate != ``'> $vagB </span>
                             </p>
                         </div>
 
@@ -278,20 +269,20 @@ function displayHome()
                 CALENDRIER DES ECHOGRAPHIES
             </h2>
 
-            <p class='text'>
-                Echographie précoce: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo0A</span>
-                et le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo0B </span>
+            <p class='text' v-if='conceptionDate != ``'>
+                Echographie précoce: entre le <span > $echo0A</span>
+                et le <span> $echo0B </span>
                 <br>
 
-                1ère échographie recommandée: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo1A </span> et le
-                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo1B </span> <br>
+                1ère échographie recommandée: entre le <span> $echo1A </span> et le
+                <span> $echo1B </span> <br>
 
-                2ème échographie recommandée: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo2A </span>
-                et le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo2B </span> <br>
+                2ème échographie recommandée: entre le <span> $echo2A </span>
+                et le <span> $echo2B </span> <br>
 
                 3ème échographie recommandée:
-                entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo3A </span> et le
-                <span v-if='conceptionDate != `JJ-MM-AAAA`'> $echo3B </span>
+                entre le <span> $echo3A </span> et le
+                <span> $echo3B </span>
             </p>
 
             <p class='text'>
@@ -309,24 +300,24 @@ function displayHome()
             CALENDRIER DES CONSULTATIONS PRENATALES
         </h2>
 
-        <p class='text'>
-            4ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app4A</span> et le
-            <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app4B </span> <br>
+        <p class='text' v-if='conceptionDate != ``'>
+            4ème mois de grossesse: entre le <span> $app4A</span> et le
+            <span> $app4B </span> <br>
 
-            5ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app5A </span> et le
-            <span v-if='conceptionDate != `JJ-MM-AAAA`'>$app5B </span> <br>
+            5ème mois de grossesse: entre le <span> $app5A </span> et le
+            <span>$app5B </span> <br>
 
-            6ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app6A </span> et le
-            <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app6B </span> <br>
+            6ème mois de grossesse: entre le <span> $app6A </span> et le
+            <span> $app6B </span> <br>
 
-            7ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app7A </span> et le
-            <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app7B </span> <br>
+            7ème mois de grossesse: entre le <span> $app7A </span> et le
+            <span> $app7B </span> <br>
 
-            8ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'>$app8A </span> et le
-            <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app8B </span> <br>
+            8ème mois de grossesse: entre le <span>$app8A </span> et le
+            <span> $app8B </span> <br>
 
-            9ème mois de grossesse: entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app9A </span> et le
-            <span v-if='conceptionDate != `JJ-MM-AAAA`'> $app9B </span>
+            9ème mois de grossesse: entre le <span> $app9A </span> et le
+            <span> $app9B </span>
         </p>
 
         <p class='text'>
@@ -347,7 +338,7 @@ function displayHome()
             </h2>
 
             <div>
-                <p class='text'>
+                <p class='text' v-if='conceptionDate != ``'>
                     <label for=''>
                         Nombre d'enfant(s) déjà né(s) : <select v-model='kids' required id=''
                             style='height: 40px; margin-top: 10px;'>
@@ -373,10 +364,10 @@ function displayHome()
             </div>
 
             <p class='text'>
-                Début de votre congé maternité : <span> {{ dateVacA }} </span> <br>
-                Fin de votre congé maternité : <span> {{ dateVacB }} </span> <br>
+                Début de votre congé maternité : <span v-if='conceptionDate != ``'> {{ dateVacA }} </span> <br>
+                Fin de votre congé maternité : <span v-if='conceptionDate != ``'> {{ dateVacB }} </span> <br>
                 Date de pris en charge l'assurance maladie:
-                <span> {{ dateCare }} </span> <br>
+                <span v-if='conceptionDate != ``'> {{ dateCare }} </span> <br>
             </p>
 
             <p class='text'>Pour bénéficier de tous vos droits, vous devez envoyer votre
@@ -404,7 +395,7 @@ function displayHome()
             </h2>
 
             <div>
-                <div class='ovulation'>
+                <div class='ovulation' v-if='conceptionDate != ``'>
                     <label for=''>
                         Cycle : <select v-model='cycle' id='' style='height: 40px;'>
                             <option value='24'>24</option>
@@ -422,8 +413,8 @@ function displayHome()
             </div>
 
             <p class='text mt-2'>
-                Période d'ovulation: entre le <span> {{ fecondDateA }} </span> et le
-                <span> {{ fecondDateB }}
+                Période d'ovulation: entre le <span v-if='conceptionDate != ``'> {{ fecondDateA }} </span> et le
+                <span v-if='conceptionDate != ``'> {{ fecondDateB }}
                 </span>
             </p>
 
@@ -458,11 +449,13 @@ function displayHome()
 
 
                 <p class='text'>
-                    A partir du <span v-if='conceptionDate != `JJ-MM-AAAA`'>$prematureDate </span> votre bébé n'est plus prématuré. <br>
-                    La consultation avec l'anesthésiste est à effectuer à partir du <span v-if='conceptionDate != `JJ-MM-AAAA`'> $anesth </span>
+                    A partir du <span v-if='conceptionDate != ``'>$prematureDate </span>
+                    votre bébé n'est plus prématuré. <br>
+                    La consultation avec l'anesthésiste est à effectuer à partir du
+                    <span v-if='conceptionDate != ``'> $anesth </span>
                     <br>
-                    Le prélèvement vaginal est à éffectuer entre le <span v-if='conceptionDate != `JJ-MM-AAAA`'>$vagA</span> et le
-                    <span v-if='conceptionDate != `JJ-MM-AAAA`'> $vagB </span>
+                    Le prélèvement vaginal est à éffectuer entre le <span v-if='conceptionDate != ``'> $vagA</span> et le
+                    <span v-if='conceptionDate != ``'> $vagB </span>
                 </p>
 
                 <p class='text'>
@@ -575,5 +568,5 @@ function displayHome()
     );
 }
 
-//add_action('init', 'wpse1611987_init_session');
+add_action('init', 'wpse1611987_init_session');
 add_shortcode('pregnancyCalendar', 'displayHome');

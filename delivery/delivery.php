@@ -38,6 +38,7 @@ function displayDelivery()
             $lastPeriodDate = addDaysToDate($conceptionDate, -14);
 
             $_SESSION['conceptionDate'] = $conceptionDate;
+            $_SESSION['lastPeriodDate'] = $lastPeriodDate;
         }
     }
 
@@ -71,7 +72,7 @@ function displayDelivery()
                             </div>
 
                             <label for=''>
-                            <p>Date des dernières règles: </p>
+                            <p>Date de conception: </p>
                             <input class='date mx-auto text-center'
                             name='conceptionDate' type='text'
                             onfocus='(this.type = `date`)'  style='width:150px; height: 30px; border-color: black'
@@ -111,12 +112,16 @@ function displayDelivery()
                             DATE D'ACCOUCHEMENT:
                         </h2>
                         <p class='text text-justify'>
-                            Date d'accouchement prévue: <span> $dueDate</span> <br>
+                            Date d'accouchement prévue: <span >";
+    if ($conceptionDate != '') {
+        echo $dueDate;
+    }
+    echo "</span> <br>
 
                         </p>
                         <br>
             </div>
-                    <hr>
+                    <hr><br>
 
 
             <div class='links mx-auto text-center'>
