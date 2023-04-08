@@ -94,6 +94,8 @@ function displayWeek()
 
     $month = convertInMonths($duration);
 
+    $dueDate = addDaysToDate($conceptionDate, 273);
+
     $percentage = number_format(($duration * 100) / 284, '0', '', ' ');
 
     $endDatee = addDaysToDate($conceptionDate, 280);
@@ -130,7 +132,7 @@ function displayWeek()
         <div class='main'>
             <div class='main__text'>
                 <h1 class='title'>
-                    CALCUL SEMAINE GROSSESSE
+                    CALCUL SEMAINE ET MOIS DE GROSSESSE
                 </h1>
                 <p class='text text-center'>
                     Toutes les dates importantes de votre grossesse
@@ -179,6 +181,7 @@ function displayWeek()
                 </h2>
                 <p class='text'>
                     Vous êtes enceinte de: <span v-if='conceptionDate !=``'> $convertedDuration </span> <br>
+
                     Durée d'aménorrhées (absence de règles): <span  v-if='conceptionDate !=``'> $convertedAnDuration </span> <br>
                     <br>
 
@@ -191,11 +194,11 @@ function displayWeek()
 
         <div class='item' id='calendar'>
             <h2>
-            CALENDRIER DE VOTRE GROSSESSE SEMAINE PAR SEMAINE
+            CALCUL SEMAINE DE GROSSESSE
             </h2>
 
 
-            <div class='weeks' v-if='conceptionDate != ``'>
+            <div class='weeks' v-if='conceptionDate != ``'>s
             <div class='container table'>
                 <div class='tr row'>";
     foreach ($weeksArray as $index => $week):
@@ -221,9 +224,6 @@ function displayWeek()
     echo "</div>
             </div>
         </div>
-
-
-
             <p class='text mt-4'>
             La durée de la grossesse est un sujet important pour les femmes enceintes et leurs médecins. Il est important de comprendre les différentes méthodes de calcul pour déterminer le nombre de semaines de grossesse et d'aménorrhée.
             <br><br>
@@ -236,26 +236,42 @@ function displayWeek()
         </div>
         <hr>
 
-        <div class='links mx-auto text-center'>
-            <a class='btn btn-primary'   style='background-color: #fa899c;
-            border: none; color: white;'
-                href='https://www.calendriers-grossesse.com/calcul-semaine-de-grossesse/'>
-                Calcul semaine de-grossesse
-            </a>
-
-            <a class='btn btn-primary'  style='background-color: #fa899c;
-            border: none; color: white;'
-                href='https://www.calendriers-grossesse.com/calcul-mois-de-grossesse/'>
-                Calcul mois de grossesse
-            </a>
-
-            <a class='btn btn-primary'   style='background-color: #fa899c;
-            border: none; color: white;'
-                href='https://www.calendriers-grossesse.com/calcul-date-daccouchement/'>
-                Calcul date d'accouchement
-            </a>
-        </div>
     </div>
+
+    <div class='item' id='calendar'>
+        <h2>
+        CALCUL MOIS DE GROSSESSE
+        </h2>
+
+        <div class='bottom'>
+
+        <p class='text text-justify'> <br>
+        Vous êtes dans le: <span >";
+    if ($conceptionDate != '') {
+        echo $month;
+    }
+    echo "</span> de grossesse </span>
+    </p>
+</div>
+
+       <p>
+       Le calcul de votre mois de grossesse est une étape importante pour suivre la croissance et le développement de votre
+        bébé. Le premier jour de votre dernière période menstruelle est utilisé pour déterminer la date de début de votre
+        grossesse. Chaque mois de grossesse est généralement considéré comme équivalent
+        à quatre semaines, soit 28 jours. Cependant, il est important de noter que chaque
+         grossesse est unique, et que la durée de gestation peut varier de quelques jours à plusieurs semaines.
+         <br><br>
+       Le développement de votre bébé est divisé en trois trimestres, chacun d'une durée d'environ 13 semaines. Au cours du premier trimestre, votre bébé passera d'un simple amas de cellules à un petit être humain formé. Les organes vitaux se développeront, y compris le cerveau, le cœur, le foie et les reins. Les bras et les jambes se développeront également, ainsi que les doigts et les orteils.
+       <br><br>
+       Au cours du deuxième trimestre, votre bébé continuera à se développer rapidement. Les cheveux, les ongles et les dents commenceront à se former. Votre bébé commencera également à bouger et vous pourrez peut-être sentir les premiers mouvements. À la fin du deuxième trimestre, votre bébé sera assez grand pour que vous puissiez voir les contours de son corps lors d'une échographie.
+       <br><br>
+       Le troisième trimestre est le dernier trimestre de votre grossesse, et votre bébé sera pratiquement prêt à naître. Il continuera à prendre du poids et à se préparer à la naissance. Vous pourrez peut-être ressentir des contractions de Braxton Hicks, qui sont des contractions d'entraînement pour votre corps en préparation de l'accouchement.
+       <br><br>
+       En fin de compte, il est important de se rappeler que chaque grossesse est unique. Le suivi régulier de votre grossesse auprès de votre médecin ou sage-femme est essentiel pour garantir la santé de votre bébé et de vous-même. Ils pourront vous donner des informations plus précises sur le développement de votre bébé et sur le moment de votre accouchement prévu.
+       </p>
+    </div>
+
+
 </div>
     ";
     wp_enqueue_script(

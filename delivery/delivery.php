@@ -91,7 +91,7 @@ function displayDelivery()
 
             <div class='item' id='calendar'>
                 <h2>
-                   DATE D'ACCOUCHEMENT
+                DATE D'ACCOUCHEMENT: CALCUL DU TERME DE GROSSESSE
                 </h2>
 
 
@@ -105,12 +105,14 @@ function displayDelivery()
                 En cas de dépassement de la DPA, les médecins peuvent recommander des mesures pour déclencher l'accouchement, telles que l'administration d'ocytocine ou une césarienne. Cependant, il est important de noter que chaque grossesse est unique et que les décisions concernant l'accouchement doivent être prises au cas par cas, en tenant compte de la santé de la mère et du bébé.
                 </p>
             </div>
-            <hr> <br>
+            <hr>
+            <h2 class='subtitle'>
+                            DATE D'ACCOUCHEMENT
+                        </h2>
+
 
             <div class='bottom'>
-                        <h2 class='subtitle'>
-                            DATE D'ACCOUCHEMENT:
-                        </h2>
+
                         <p class='text text-justify'>
                             Date d'accouchement prévue: <span >";
     if ($conceptionDate != '') {
@@ -119,31 +121,11 @@ function displayDelivery()
     echo "</span> <br>
 
                         </p>
-                        <br>
             </div>
                     <hr><br>
 
 
-            <div class='links mx-auto text-center'>
-                <a class='btn btn-primary'  style='background-color: #fa899c;
-                border: none; color: white;'
-                    href='https://www.calendriers-grossesse.com/'>
-                    Calendrier grossesse
-                </a>
 
-                <a class='btn btn-primary'  style='background-color: #fa899c;
-                border: none; color: white;'
-                    href='https://www.calendriers-grossesse.com/calcul-semaine-de-grossesse/'>
-                    Calcul semaine de grossesse
-                </a>
-
-                <a class='btn btn-primary'  style='background-color: #fa899c;
-                border: none; color: white;'
-                    href='https://www.calendriers-grossesse.com/calcul-mois-de-grossesse/'>
-                    Calcul mois de grossesse
-                </a>
-
-            </div>
         </div>
     </div>
     ";

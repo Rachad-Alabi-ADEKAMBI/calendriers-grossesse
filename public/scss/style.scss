@@ -234,24 +234,7 @@ html, body{
 table {
     border: 1px solid black;
 }
-
-.months {
-    background-color: #fce4d6;
-    width: 80%;
-    margin: auto;
-    padding: 10px;
-}
-
-.month {
-    border: 1px solid black;
-    padding-top: 7px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.current-month, .current-week {
+.current-week {
     border: 10px solid #fa899c;
 }
 

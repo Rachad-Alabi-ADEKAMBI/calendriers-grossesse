@@ -193,21 +193,7 @@ html, body {
 .item table {
   border: 1px solid black;
 }
-.item .months {
-  background-color: #fce4d6;
-  width: 80%;
-  margin: auto;
-  padding: 10px;
-}
-.item .month {
-  border: 1px solid black;
-  padding-top: 7px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.item .current-month, .item .current-week {
+.item .current-week {
   border: 10px solid #fa899c;
 }
 .item .text {
